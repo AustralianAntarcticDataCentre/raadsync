@@ -1,0 +1,27 @@
+{"global":[{
+    "wget_flags":"--no-passive-ftp",
+    "http_proxy":"http://your.proxy.server:8080",
+    "ftp_proxy":"ftp://your.ftp.proxy.server:21",
+    "local_file_root":"/path/to/data/directory",
+}],
+"datasets":[
+    {"name":"Artist AMSR-E passive microwave sea ice concentration",
+     "do_sync":true,
+     "source_urls":"ftp://ftp-projects.zmaw.de/seaice/AMSR-E_ASI_IceConc/no_landmask/hdf/s6250/2011/*",
+     "postprocess":""
+    },
+    {"name":"GSHHG coastline data",
+     "do_sync":true
+    },
+    {"name":"NOAA Optimum Interpolation 1/4 Degree Daily Sea Surface Temperature Analysis",
+     "do_sync":true,
+     "postprocess":""
+    },
+    {"name":"Ssalto/Duacs gridded absolute dynamic topography",
+     "do_sync":true,
+     "postprocess":"",
+     "user":"your-aviso-account-username",
+     "password":"your-aviso-account-password"
+    }
+]
+}
