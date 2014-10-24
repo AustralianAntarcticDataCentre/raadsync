@@ -21,25 +21,25 @@ You will need to modify this configuration to suit your purposes. There are two 
 
 1. Use the default configuration with local adjustments (recommended if you intend to mostly use datasets already defined in the default file). Create a "local" configuration file that alters or adds to the default configuration. Start with the example local configuration file provided in the package:
 
-```{r}
-file.copy(system.file("extdata","sample_local_config.json",package="raadsync"),"/path/to/your/local_config.json")
-```
+  ```{r}
+  file.copy(system.file("extdata","sample_local_config.json",package="raadsync"),"/path/to/your/local_config.json")
+  ```
 
-Edit `/path/to/your/local_config.json` to suit your needs.
+  Edit `/path/to/your/local_config.json` to suit your needs.
 
-Then to use this configuration, use
+  Then to use this configuration in combination with the default configuration file, use
 
-```{r}
-cf=read_repo_config("/path/to/your/local_config.json")
-sync_repo(cf)
-```
+  ```{r}
+  cf=read_repo_config("/path/to/your/local_config.json")
+  sync_repo(cf)
+  ```
 
 
 2. Use your own configuration file entirely. You can use the default configuration file as a starting point.
 
-When using solely your own configuration file, specify NULL for the `default_config_file` parameter in `read_repo_config`:
+  When using solely your own configuration file, specify NULL for the `default_config_file` parameter in `read_repo_config`:
 
-```{r}
-cf=read_repo_config("/path/to/your/config.json",NULL)
-sync_repo(cf)
-```
+  ```{r}
+  cf=read_repo_config("/path/to/your/config.json",NULL)
+  sync_repo(cf)
+  ```
