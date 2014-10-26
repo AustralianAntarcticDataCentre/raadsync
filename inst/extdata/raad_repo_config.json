@@ -106,7 +106,6 @@
      "method_flags":"--recursive --level=inf --accept=\"avhrr-only*\" --reject=\"*preliminary*\" --follow-ftp --no-parent",
      "postprocess":"gunzip"
     },
-
     {"name":"Ssalto/Duacs gridded absolute dynamic topography",
      "description":"Gridded sea surface heights above geoid from satellite altimetry",
      "reference": "http://www.aviso.altimetry.fr/en/data/products/sea-surface-height-products/global/madt.html",
@@ -158,6 +157,15 @@
      "do_sync":false,
      "method":"wget",
      "method_flags":"--recursive --level=1 --accept=\"*bin*.zip,README.TXT\"",
+     "postprocess":"unzip"
+    },
+    {"name":"Polar environmental data layers",
+     "description":"These layers are climatological and other summary layers that may be useful for purposes such as general modelling, regionalisation, and exploratory analyses",
+     "reference": "http://gcmd.gsfc.nasa.gov/KeywordSearch/Metadata.do?Portal=amd_au&EntryId=Polar_Environmental_Data",
+     "source_urls":"http://webdav.data.aad.gov.au/data/environmental/derived/antarctic/",
+     "do_sync":false,
+     "method":"wget",
+     "method_flags":"--recursive --level=inf --timestamping --no-parent --reject=\"index.html\"",
      "postprocess":"unzip"
     }
 ]
