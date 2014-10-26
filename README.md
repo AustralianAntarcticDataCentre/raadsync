@@ -17,9 +17,11 @@ Configuration files are used to tell `raadsync` which data sets to synchronise, 
 system.file("extdata","raad_repo_config.json",package="raadsync")
 ```
 
-You will need to modify this configuration to suit your purposes. There are two different ways to do this:
+You will need to modify this configuration to suit your purposes (in particular, the default configuration sets `do_sync` to FALSE for all datasets, so it won't actually synchronise any data until you override one or more of these).
 
-1. Use the default configuration with local adjustments (recommended if you intend to mostly use datasets already defined in the default file). Create a "local" configuration file that alters or adds to the default configuration. Start with the example local configuration file provided in the package:
+There are two different ways to manage configurations:
+
+1. Use the default configuration with local adjustments (recommended if you intend to mostly use datasets already defined in the default file). Create a local configuration file that alters or adds to the default configuration. Start with the example local configuration file provided in the package:
 
   ```{r}
   file.copy(system.file("extdata","sample_local_config.json",package="raadsync"),"/path/to/your/local_config.json")
@@ -27,7 +29,7 @@ You will need to modify this configuration to suit your purposes. There are two 
 
   Edit `/path/to/your/local_config.json` to suit your needs.
 
-  Then to use this configuration in combination with the default configuration file, use
+  Then to use this configuration in combination with the default configuration file:
 
   ```{r}
   cf=read_repo_config("/path/to/your/local_config.json")
