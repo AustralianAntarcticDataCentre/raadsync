@@ -52,8 +52,9 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
             ## iterate through source_urls
             this_dataset$source_url=this_dataset$source_urls[[1]][[si]]
             ## take snapshot of this directory before we start syncing
+            this_path_no_trailing_sep=sub("[\\/]$","",directory_from_url(this_dataset$source_url))
             if (verbose) cat(sprintf(" building file list ... "))
-            file_list_before=file.info(list.files(path=directory_from_url(this_dataset$source_url),recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
+            file_list_before=file.info(list.files(path=this_path_no_trailing_sep,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
             if (verbose) cat(sprintf("done.\n"))
             if (this_dataset$method=="wget") {
                 do_wget(build_wget_call(this_dataset),this_dataset)
@@ -64,7 +65,7 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
 
             ## snapshot after syncing
             if (verbose) cat(sprintf(" building post-download file list ... "))
-            file_list_after=file.info(list.files(path=directory_from_url(this_dataset$source_url),recursive=TRUE,full.names=TRUE))
+            file_list_after=file.info(list.files(path=this_path_no_trailing_sep,recursive=TRUE,full.names=TRUE))
             if (verbose) cat(sprintf("done.\n"))
 
             ## postprocessing

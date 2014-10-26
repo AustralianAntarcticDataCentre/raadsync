@@ -62,7 +62,7 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
                    was_ok=FALSE
                    suppressWarnings(warning("")) ## clear last.warning message
                    ## unzip will put files in the current directory by default, so we need to extract the target directory for this file
-                   target_dir=sub("[^\\/]+$","",thisf)
+                   target_dir=dirname(thisf)
                    tryCatch({ unzipped_files<-unzip(thisf,list=TRUE) ## get list of files in archive
                               if (!overwrite) {
                                   ## extract only files that don't exist
