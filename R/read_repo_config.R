@@ -81,7 +81,7 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
                 }
             } else {
                 ## append this datasets to dcf
-                dcf$datasets=rbind(dcf$datasets,lcf$datasets[k,])
+                dcf$datasets=rbind.fill(dcf$datasets,lcf$datasets[k,])
             }
         }
     }
