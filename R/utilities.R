@@ -49,7 +49,7 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
     ## decompress (unzip/gunzip) compressed files
     ## this function overwrites existing decompressed files if overwrite is TRUE
     assert_that(is.string(method))
-    method=match.arg(method,c("unzip","unzip_delete","gunzip","gunzip_delete"))
+    method=match.arg(method,c("unzip","unzip_delete","gunzip","gunzip_delete","bunzip2","bunzip2_delete"))
     ## unzip() issues warnings in some cases when operations have errors, and sometimes issues actual errors
     warn=getOption("warn") ## save current setting
     options(warn=0) ## so that we can be sure that last.warning will be set
@@ -113,6 +113,28 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
                        tryCatch(gunzip(thisf,destname=sub("\\.gz$","",thisf),remove=method=="gunzip_delete",overwrite=overwrite),
                                 error=function(e){
                                     cat(sprintf("  problem gunzipping %s: %s",thisf,e))
+                                }
+                                )
+                   }
+                   cat(sprintf("done\n"))
+               },
+               "bunzip2_delete"=,
+               "bunzip2"={
+                   ## same as for gunzip
+                   unzip_this=TRUE
+                   if (!overwrite) {
+                       ## check if file exists, so that we can issue a more informative trace message to the user
+                       destname=gsub("[.]bz2$","",thisf,ignore.case=TRUE)
+                       if (file.exists(destname)) {
+                           cat(sprintf(" uncompressed file exists, skipping ... "))
+                           unzip_this=FALSE
+                       }
+                   }
+                   if (unzip_this) {
+                       ## wrap this in tryCatch block so that errors do not halt our whole process
+                       tryCatch(bunzip2(thisf,destname=sub("\\.bz2$","",thisf),remove=method=="bunzip2_delete",overwrite=overwrite),
+                                error=function(e){
+                                    cat(sprintf("  problem bunzipping %s: %s",thisf,e))
                                 }
                                 )
                    }

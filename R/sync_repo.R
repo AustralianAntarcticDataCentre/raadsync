@@ -58,6 +58,10 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
             if (verbose) cat(sprintf("done.\n"))
             if (this_dataset$method=="wget") {
                 do_wget(build_wget_call(this_dataset),this_dataset)
+            } else if (exists(this_dataset$method,mode="function")) {
+                ## dispatch to custom handler
+                if (verbose) cat(sprintf(" using custom handler \"%s\"\n",this_dataset$method))
+                eval(parse(text=paste0(this_dataset$method,"(this_dataset)")))
             } else {
                 restore_settings(settings)
                 stop("unsupported method ",this_dataset$method," specified")
@@ -77,7 +81,7 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
             pp=tolower(pp)
 
             ## decompression behaviour: for *_delete, unconditionally decompress all compressed files and then delete them
-            ## for gunzip (which can only contain a single file), decompress only if .gz file has changed
+            ## for gunzip/bunzip2 (which can only contain a single file), decompress only if .gz/.bz2 file has changed
             ## for unzip (which can contain multiple files), decompress all if the zip file has changed, or if there are any files present in the zip file that don't exist in decompressed form
 
             if (length(pp)>0) {
@@ -86,18 +90,21 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
                         ## unconditionally decompress any zipped files and then delete them
                         files_to_decompress=list.files(directory_from_url(this_dataset$source_url),pattern="\\.zip$",recursive=TRUE)
                         do_decompress_files(pp[i],files=files_to_decompress)
-                    } else if (pp[i]=="gunzip_delete") {
-                        ## unconditionally gunzip then delete
-                        files_to_decompress=list.files(directory_from_url(this_dataset$source_url),pattern="\\.gz$",recursive=TRUE)
+                    } else if (pp[i] %in% c("gunzip_delete","bunzip2_delete")) {
+                        ## unconditionally unzip then delete
+                        file_pattern=ifelse(pp[i]=="gunzip_delete","\\.gz$","\\.bz2$")
+                        files_to_decompress=list.files(directory_from_url(this_dataset$source_url),pattern=file_pattern,recursive=TRUE)
                         do_decompress_files(pp[i],files=files_to_decompress)
-                    } else if (pp[i]=="gunzip") {
-                        ## decompress but retain compressed file
-                        ## decompress if .gz file has changed
-                        files_to_decompress=find_changed_files(file_list_before,file_list_after,"\\.gz$")
+                    } else if (pp[i] %in% c("gunzip","bunzip2")) {
+                        ## decompress but retain compressed file. decompress only if .gz/.bz2 file has changed
+                        file_pattern=ifelse(pp[i]=="gunzip_delete","\\.gz$","\\.bz2$")
+                        files_to_decompress=find_changed_files(file_list_before,file_list_after,file_pattern)
+                        cat(str(files_to_decompress),"\n")
                         do_decompress_files(pp[i],files=files_to_decompress)
                         ## also decompress if uncompressed file does not exist
                         files_to_decompress=setdiff(rownames(file_list_after),files_to_decompress) ## those that we haven't just dealt with
-                        files_to_decompress=files_to_decompress[str_detect(files_to_decompress,"\\.gz$")] ## only gz files
+                        files_to_decompress=files_to_decompress[str_detect(files_to_decompress,file_pattern)] ## only .gz/.bz2 files
+                        cat(str(files_to_decompress),"\n")
                         do_decompress_files(pp[i],files=files_to_decompress,overwrite=FALSE)
                         ## nb this may be slow, so might be worth explicitly checking for the existence of uncompressed files
                     } else if (pp[i]=="unzip") {
