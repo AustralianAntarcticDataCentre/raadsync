@@ -1,7 +1,7 @@
 Package: raadsync
 Type: Package
 Title: Data repository synchronisation
-Version: 0.031
+Version: 0.04
 Date: 2014-11-10
 Author: Australian Antarctic Data Centre
 Maintainer: Australian Antarctic Data Centre <aadc@aad.gov.au>

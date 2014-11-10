@@ -14,7 +14,15 @@ oceandata=function(dataset) {
     assert_that(is.string(dataset$method_flags))
     myfiles=system(paste0("wget -q --post-data=\"addurl=1&results_as_file=1&",dataset$method_flags,"\" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi"),intern=TRUE)
     myfiles=myfiles[grepl("^http://",myfiles)] ## get rid of header and blank lines
-    ## for each file, download and store in mapped place
+    ## special case: L3bin RRS files need to be accompanied by the x00 x01 ... x11 files, but these aren't listed by the file search utility!
+    l3b_rrs_files=myfiles[grepl("L3b.*RRS\\.main",myfiles)]
+    if (length(l3b_rrs_files)>0) {
+        for (xval in 0:11) {
+            myfiles=c(myfiles,sub("\\.main\\.",sprintf(".x%02d.",xval),l3b_rrs_files))
+        }
+    }
+    myfiles=sort(myfiles)
+    ## for each file, download and store in appropriate directory
     for (this_url in myfiles) {
         dummy=dataset
         switch(as.character(dataset$clobber),
