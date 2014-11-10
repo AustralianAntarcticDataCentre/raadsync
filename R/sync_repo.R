@@ -54,7 +54,9 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
             ## take snapshot of this directory before we start syncing
             this_path_no_trailing_sep=sub("[\\/]$","",directory_from_url(this_dataset$source_url))
             if (verbose) cat(sprintf(" building file list ... "))
-            file_list_before=file.info(list.files(path=this_path_no_trailing_sep,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
+            file_pattern=sub(".*/","",this_dataset$source_url)
+            if (nchar(file_pattern)<1) file_pattern=NULL
+            file_list_before=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
             if (verbose) cat(sprintf("done.\n"))
             if (this_dataset$method=="wget") {
                 do_wget(build_wget_call(this_dataset),this_dataset)
@@ -69,7 +71,9 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
 
             ## snapshot after syncing
             if (verbose) cat(sprintf(" building post-download file list ... "))
-            file_list_after=file.info(list.files(path=this_path_no_trailing_sep,recursive=TRUE,full.names=TRUE))
+            file_pattern=sub(".*/","",this_dataset$source_url)
+            if (nchar(file_pattern)<1) file_pattern=NULL
+            file_list_after=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE))
             if (verbose) cat(sprintf("done.\n"))
 
             ## postprocessing
