@@ -23,7 +23,7 @@ oceandata=function(dataset) {
                dummy$method_flags<-"" ## otherwise no flag needed, specifying -O below will cause overwrite of existing file
                )
         ##dummy$method_flags=paste(dummy$method_flags,"-O",oceandata_url_mapper(this_url),sep=" ")
-        dummy$method_flags=paste(dummy$method_flags,"--recursive","--directory-prefix",oceandata_url_mapper(this_url,path_only=TRUE),"--cut-dirs=2","--no-host-directories",sep=" ")
+        dummy$method_flags=paste(dummy$method_flags,"--progress=dot:giga","--recursive","--directory-prefix",oceandata_url_mapper(this_url,path_only=TRUE),"--cut-dirs=2","--no-host-directories",sep=" ")
         dummy$source_url=this_url
         wget_call=build_wget_call(dummy)
         do_wget(wget_call,dataset)
