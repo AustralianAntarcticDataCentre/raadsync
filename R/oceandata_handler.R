@@ -2,31 +2,50 @@ oceandata=function(dataset) {
     ## oceandata synchronisation handler
 
     ## oceandata provides a file search interface, e.g.:
-    ## wget -q --post-data="dtype=L3m&addurl=1&results_as_file=1&search=A2002*DAY_CHL_chlor*9km*" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi
+    ## wget -q --post-data="cksum=1&search=A2002*DAY_CHL_chlor*9km*" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi
     ## or
-    ## wget -q --post-data="dtype=L3b&addurl=1&results_as_file=1&search=A2014*DAY_CHL.*" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi
-    ## this returns list of file URLs like http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2002359.L3m_DAY_CHL_chlor_a_9km.bz2
-    ## then do individual wget with renaming of output path
+    ## wget -q --post-data="dtype=L3b&cksum=1&search=A2014*DAY_CHL.*" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi
+    ## returns list of files and SHA1 checksum for each file
+    ## each file can be retrieved from http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/filename
 
     ## expect that dataset$method_flags will contain the search and dtype components of the post string
     ##  i.e. "search=...&dtype=..." in "dtype=L3m&addurl=1&results_as_file=1&search=A2002*DAY_CHL_chlor*9km*"
-    ##  or include the data type in the search e.g. "search=A2002*L3m_DAY_CHL_chlor*9km*
+    ##  or just include the data type in the search pattern e.g. "search=A2002*L3m_DAY_CHL_chlor*9km*
+
     assert_that(is.string(dataset$method_flags))
-    myfiles=system(paste0("wget -q --post-data=\"addurl=1&results_as_file=1&",dataset$method_flags,"\" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi"),intern=TRUE)
-    myfiles=myfiles[grepl("^http://",myfiles)] ## get rid of header and blank lines
-    ## for each file, download and store in appropriate directory
-    for (this_url in myfiles) {
-        dummy=dataset
-        switch(as.character(dataset$clobber),
-               "0"={dummy$method_flags<-"--no-clobber"},
-               "1"={dummy$method_flags<-"--timestamping"},
-               dummy$method_flags<-"" ## otherwise no flag needed, specifying -O below will cause overwrite of existing file
-               )
-        ##dummy$method_flags=paste(dummy$method_flags,"-O",oceandata_url_mapper(this_url),sep=" ")
-        dummy$method_flags=paste(dummy$method_flags,"--progress=dot:giga","--recursive","--directory-prefix",oceandata_url_mapper(this_url,path_only=TRUE),"--cut-dirs=2","--no-host-directories",sep=" ")
-        dummy$source_url=this_url
-        wget_call=build_wget_call(dummy)
-        do_wget(wget_call,dataset)
+    myfiles=system(paste0("wget -q --post-data=\"cksum=1&",dataset$method_flags,"\" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi"),intern=TRUE)
+    myfiles=myfiles[-c(1,2)] ## get rid of header line and blank line that follows it
+    myfiles=ldply(str_split(myfiles,"[[:space:]]+")) ## split checksum and file name from each line
+    colnames(myfiles)=c("checksum","filename")
+    ## for each file, download if needed and store in appropriate directory
+    for(idx in 1:nrow(myfiles)) {
+        this=myfiles[idx,]
+        this_url=paste0("http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/",this$filename) ## full URL
+        this_fullfile=oceandata_url_mapper(this_url) ## where local copy will go
+        this_exists=file.exists(this_fullfile)
+        download_this=!this_exists
+        if (dataset$clobber==0) {
+            ## don't clobber existing
+        } else if (dataset$clobber==1) {
+            ## replace existing if server copy newer than local copy
+            ## use checksum rather than dates for this
+            if (this_exists) {
+                download_this=digest(file=this_fullfile,algo="sha1")!=this$checksum
+            }
+        } else {
+            download_this=TRUE
+        }
+        if (download_this) {
+            dummy=dataset
+            dummy$method_flags=paste("--progress=dot:giga","--recursive","--directory-prefix",oceandata_url_mapper(this_url,path_only=TRUE),"--cut-dirs=2","--no-host-directories",sep=" ")
+            dummy$source_url=this_url
+            wget_call=build_wget_call(dummy)
+            do_wget(wget_call,dataset)
+        } else {
+            if (this_exists) {
+                cat(sprintf("not downloading %s, local copy exists with identical checksum\n",this$filename))
+            }
+        }
     }
 
 }
