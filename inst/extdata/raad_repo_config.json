@@ -167,6 +167,24 @@
      "method":"wget",
      "method_flags":"--recursive --level=inf --timestamping --no-parent --reject=\"index.html\"",
      "postprocess":"unzip"
+    },
+    {"name":"Oceandata MODIS Aqua Level-3 binned daily remote sensing reflectance",
+     "description":"Daily remote-sensing reflectance from MODIS Aqua. RRS is used to produce standard ocean colour products such as chlorophyll concentration",
+     "reference": "http://oceancolor.gsfc.nasa.gov/",
+     "source_urls":"http://oceandata.sci.gsfc.nasa.gov/MODISA/L3BIN/A*L3b_DAY_RRS*",
+     "do_sync":false,
+     "method":"oceandata",
+     "method_flags":"search=A*L3b_DAY_RRS*",
+     "postprocess":"bunzip2"
+    },
+    {"name":"Oceandata SeaWiFS Level-3 binned daily remote sensing reflectance",
+     "description":"Daily remote-sensing reflectance from SeaWiFS. RRS is used to produce standard ocean colour products such as chlorophyll concentration",
+     "reference": "http://oceancolor.gsfc.nasa.gov/",
+     "source_urls":"http://oceandata.sci.gsfc.nasa.gov/SeaWiFS/L3BIN/S*L3b_DAY_RRS*",
+     "do_sync":false,
+     "method":"oceandata",
+     "method_flags":"search=S*L3b_DAY_RRS*",
+     "postprocess":"bunzip2"
     }
 ]
 }
