@@ -21,17 +21,20 @@ restore_settings=function(settings) {
 directory_from_url=function(this_url) {
     this_url=sub("^(http|https|ftp)://","",this_url)
     this_url=sub(":","+",this_url) ## port
-    sub("\\*$","",this_url) ## trailing wildcard
+    ## discard anything after the last trailing slash if it includes asterisks (is a file mask)
+    sub("/[^/]*\\*[^/]*$","/",this_url)
 }
 
 find_changed_files=function(file_list_before,file_list_after,filename_pattern=".*") {
     ## expect both file_list_before and file_list_after to be a data.frame from file.info()
-    ## detect changes on basis of ctime attribute
+    ## detect changes on basis of ctime and size attributes
     ## returns names only
     changed_files=setdiff(rownames(file_list_after),rownames(file_list_before)) ## anything that has appeared afterwards
     for (thisf in intersect(rownames(file_list_after),rownames(file_list_before))) {
         ## files in both
-        if ((file_list_after$ctime[rownames(file_list_after)==thisf]>file_list_before$ctime[rownames(file_list_before)==thisf]) | (file_list_after$size[rownames(file_list_after)==thisf]!=file_list_before$size[rownames(file_list_before)==thisf])) {
+        thisfile_after=file_list_after[rownames(file_list_after)==thisf,]
+        thisfile_before=file_list_before[rownames(file_list_before)==thisf,]
+        if ((thisfile_after$ctime>thisfile_before$ctime) | (thisfile_after$size!=thisfile_before$size)) {
             changed_files=c(changed_files,thisf)
         }
     }
