@@ -99,7 +99,7 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
                         do_decompress_files(pp[i],files=files_to_decompress)
                     } else if (pp[i] %in% c("gunzip","bunzip2")) {
                         ## decompress but retain compressed file. decompress only if .gz/.bz2 file has changed
-                        file_pattern=ifelse(pp[i]=="gunzip_delete","\\.gz$","\\.bz2$")
+                        file_pattern=ifelse(pp[i]=="gunzip","\\.gz$","\\.bz2$")
                         files_to_decompress=find_changed_files(file_list_before,file_list_after,file_pattern)
                         do_decompress_files(pp[i],files=files_to_decompress)
                         ## also decompress if uncompressed file does not exist
