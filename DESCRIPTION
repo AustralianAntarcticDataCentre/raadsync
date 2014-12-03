@@ -4,7 +4,7 @@ Title: Data repository synchronisation
 Version: 0.081
 Date: 2014-11-13
 Author: Ben Raymond
-Maintainer: Ben Raymond <ben.raymond@aad.go.au>
+Maintainer: Ben Raymond <ben.raymond@aad.gov.au>
 Description: 
 Imports:
     digest,
