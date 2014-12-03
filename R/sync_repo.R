@@ -1,6 +1,6 @@
 #' Run the data repository synchronisation
 #'
-#' @param config data.frame: configuration as returned by \link{\code{read_repo_config}}
+#' @param config data.frame: configuration as returned by \code{\link{read_repo_config}}
 #' @param create_root logical: should the data root directory be created if it does not exist?
 #' @param verbose logical: if TRUE, provide additional progress output
 #'
