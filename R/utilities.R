@@ -57,6 +57,8 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
     ## unzip() issues warnings in some cases when operations have errors, and sometimes issues actual errors
     warn=getOption("warn") ## save current setting
     options(warn=0) ## so that we can be sure that last.warning will be set
+    ## MDS: this should use tail(warnings(), 1) instead
+    last.warning <- NULL ## to avoid check note
     for (thisf in files) {
         ## decompress, check for errors in doing so
         cat(sprintf("  decompressing: %s ... ",thisf))
