@@ -11,3 +11,6 @@
 .Rproj.user/
 
 *~
+
+# roxygen2
+NAMESPACE
