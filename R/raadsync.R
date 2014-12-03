@@ -4,5 +4,6 @@
 #' @author Australian Antarctic Data Centre \email{aadc@@aad.gov.au}
 #' @docType package
 #' @references \url{http://www1.data.antarctica.gov.au}
-#' @import digest R.utils jsonlite stringr plyr assertthat
+#' @import digest jsonlite stringr plyr assertthat
+#' @importFrom R.utils gunzip
 NULL

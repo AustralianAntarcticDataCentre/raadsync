@@ -2,9 +2,9 @@
 
 export(read_repo_config)
 export(sync_repo)
-import(R.utils)
 import(assertthat)
 import(digest)
 import(jsonlite)
 import(plyr)
 import(stringr)
+importFrom(R.utils,gunzip)
