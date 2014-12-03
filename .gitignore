@@ -14,3 +14,4 @@
 
 # roxygen2
 NAMESPACE
+man/*.Rd
