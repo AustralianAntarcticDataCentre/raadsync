@@ -24,7 +24,6 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
             if (create_root) {
                 dir.create(this_dataset$local_file_root,recursive=TRUE)
             } else {
-                setwd(working_dir)
                 restore_settings(settings)
                 stop("local_file_root: ",this_dataset$local_file_root," does not exist. Either create it or run sync_repo with create_root=TRUE")
             }
