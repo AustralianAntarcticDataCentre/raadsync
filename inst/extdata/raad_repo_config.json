@@ -203,6 +203,15 @@
      "method":"oceandata",
      "method_flags":"search=S*L3b_DAY_RRS*",
      "postprocess":"bunzip2"
+    },
+    {"name":"NASA MODIS Rapid Response Antarctic Mosaic",
+     "description":"Daily Antarctic MODIS mosaic images at 4km resolution",
+     "reference":"https://earthdata.nasa.gov/data/near-real-time-data/rapid-response",
+     "source_urls":"http://lance-modis.eosdis.nasa.gov/imagery/subsets/",
+     "do_sync":false,
+     "method":"rapid_response",
+     "method_flags":"",
+     "postprocess":""
     }
 ]
 }
