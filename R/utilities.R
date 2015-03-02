@@ -65,26 +65,26 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
         switch(method,
                "unzip_delete"=,
                "unzip"={
-                   was_ok=FALSE
+                   was_ok<-FALSE
                    suppressWarnings(warning("")) ## clear last.warning message
                    ## unzip will put files in the current directory by default, so we need to extract the target directory for this file
-                   target_dir=dirname(thisf)
+                   target_dir<-dirname(thisf)
                    tryCatch({ unzipped_files<-unzip(thisf,list=TRUE) ## get list of files in archive
                               if (!overwrite) {
                                   ## extract only files that don't exist
-                                  files_to_extract=unzipped_files$Name[!file.exists(file.path(target_dir,unzipped_files$Name))]
+                                  files_to_extract<-unzipped_files$Name[!file.exists(file.path(target_dir,unzipped_files$Name))]
                                   if (length(files_to_extract)>0) {
                                       cat(sprintf('extracting %d files into %s ... ',length(files_to_extract),target_dir))
                                       unzip(thisf,files=files_to_extract,exdir=target_dir) ## now actually unzip them
-                                      was_ok=is.null(last.warning[[1]]) && all(file.info(files_to_extract)$size>0)
+                                      was_ok<-is.null(last.warning[[1]]) && all(file.info(files_to_extract)$size>0)
                                   } else {
                                       cat(sprintf('no new files to extract (not overwriting existing files) ... '))
-                                      was_ok=TRUE
+                                      was_ok<-TRUE
                                   }
                               } else {
                                   cat(sprintf('extracting %d files into %s ... ',length(files_to_extract),target_dir))
                                   unzip(thisf,exdir=target_dir) ## now actually unzip them
-                                  was_ok=is.null(last.warning[[1]]) && all(file.info(unzipped_files)$size>0)
+                                  was_ok<-is.null(last.warning[[1]]) && all(file.info(unzipped_files)$size>0)
                               }
                               cat("done.\n")
                           },
@@ -105,13 +105,13 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
                "gunzip_delete"=,
                "gunzip"={
                    ## gunzip takes care of deleting the compressed file if remove is TRUE
-                   unzip_this=TRUE
+                   unzip_this<-TRUE
                    if (!overwrite) {
                        ## check if file exists, so that we can issue a more informative trace message to the user
-                       destname=gsub("[.]gz$","",thisf,ignore.case=TRUE)
+                       destname<-gsub("[.]gz$","",thisf,ignore.case=TRUE)
                        if (file.exists(destname)) {
                            cat(sprintf(" uncompressed file exists, skipping ... "))
-                           unzip_this=FALSE
+                           unzip_this<-FALSE
                        }
                    }
                    if (unzip_this) {
@@ -127,13 +127,13 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
                "bunzip2_delete"=,
                "bunzip2"={
                    ## same as for gunzip
-                   unzip_this=TRUE
+                   unzip_this<-TRUE
                    if (!overwrite) {
                        ## check if file exists, so that we can issue a more informative trace message to the user
-                       destname=gsub("[.]bz2$","",thisf,ignore.case=TRUE)
+                       destname<-gsub("[.]bz2$","",thisf,ignore.case=TRUE)
                        if (file.exists(destname)) {
                            cat(sprintf(" uncompressed file exists, skipping ... "))
-                           unzip_this=FALSE
+                           unzip_this<-FALSE
                        }
                    }
                    if (unzip_this) {
@@ -201,10 +201,10 @@ resolve_wget_flags=function(primary_flags,secondary_flags) {
     for (thisflag in setdiff(secondary_flags,wgf)) {
         switch(thisflag,
                "-N"=,
-               "--timestamping"={ if (! any(c("--no-clobber","-nc") %in% wgf)) wgf=c(wgf,thisflag) },
+               "--timestamping"={ if (! any(c("--no-clobber","-nc") %in% wgf)) wgf<-c(wgf,thisflag) },
                "-nc"=,
-               "--no-clobber"={ if (! any(c("--timestamping","-N") %in% wgf)) wgf=c(wgf,thisflag) },
-               wgf=c(wgf,thisflag))
+               "--no-clobber"={ if (! any(c("--timestamping","-N") %in% wgf)) wgf<-c(wgf,thisflag) },
+               wgf<-c(wgf,thisflag))
     }
     paste(wgf,sep="",collapse=" ")
 }
