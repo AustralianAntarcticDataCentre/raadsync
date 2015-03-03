@@ -135,3 +135,58 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
     ##class(dcf)=c('repo_config',class(dcf)) ## class info not used yet - comment out for time being
     dcf$datasets
 }
+
+#' Produce summary of repository configuration
+#'
+#' @param repo_config data.frame: configuration as returned by read_repo_config
+#' @param file string: path to file to write summary to
+#' @param format string: produce HTML ("html") or Rmarkdown ("Rmd") file?
+#'
+#' @return Path to the summary file in HTML or Rmarkdown format
+#'
+#' @export
+repo_summary=function(repo_config,file,format="html") {
+    assert_that(is.string(file))
+    assert_that(is.string(format))
+    format=match.arg(tolower(format),c("html","rmd"))
+
+    ## for backwards compatibility with older configs that might not have these columns
+    if (is.null(repo_config$access_function)) {
+        repo_config$access_function=""
+    }
+    if (is.null(repo_config$data_group)) {
+        repo_config$data_group=""
+    }
+
+    ## write summary as temporary Rmd file
+    rmd_file=tempfile(fileext=".Rmd")
+    cat("---\ntitle: \"Summary of raadsync repository\"\ndate: \"",date(),"\"\noutput:\n  html_document:\n    toc: true\n    theme: cerulean\n    highlight: default\n---\n\n",file=rmd_file,append=FALSE)
+
+    cat("Summary of raadsync repository\n========\n",file=rmd_file,append=TRUE)
+
+    repo_config$data_group[repo_config$data_group==""]=NA ## so that arrange puts them last
+    repo_config=arrange(repo_config,data_group)
+    repo_config$data_group[is.na(repo_config$data_group)]=""
+    last_group="blah"
+    for (k in 1:nrow(repo_config)) {
+        if (last_group!=repo_config$data_group[k]) {
+            cat("## Data group: ",repo_config$data_group[k],"\n",file=rmd_file,append=TRUE)
+        }
+        last_group=repo_config$data_group[k]
+        cat("### ",repo_config$name[k],"\n",file=rmd_file,append=TRUE)
+        cat("\n",repo_config$description[k],"\n",file=rmd_file,append=TRUE)
+        cat("\nReference: ",repo_config$reference[k],"\n",file=rmd_file,append=TRUE)
+        thisfun=repo_config$access_function[k]
+        if (is.na(thisfun) || thisfun=="") thisfun="none registered"
+        cat("\nAssociated access functions: ",repo_config$access_function[k],"\n",file=rmd_file,append=TRUE)
+        cat("\nIs currently synchronized: ",repo_config$do_sync[k],"\n",file=rmd_file,append=TRUE)
+    }
+
+    if (format=="html") {
+        ## knit to html
+        knit2html(rmd_file,output=sub("Rmd$","md",rmd_file))
+        sub("Rmd$","html",rmd_file)
+    } else {
+        rmd_file
+    }
+}
