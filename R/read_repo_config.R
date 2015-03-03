@@ -139,13 +139,13 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
 #' Produce summary of repository configuration
 #'
 #' @param repo_config data.frame: configuration as returned by read_repo_config
-#' @param file string: path to file to write summary to
+#' @param file string: path to file to write summary to. A temporary file is used by default
 #' @param format string: produce HTML ("html") or Rmarkdown ("Rmd") file?
 #'
 #' @return Path to the summary file in HTML or Rmarkdown format
 #'
 #' @export
-repo_summary=function(repo_config,file,format="html") {
+repo_summary=function(repo_config,file=tempfile(),format="html") {
     assert_that(is.string(file))
     assert_that(is.string(format))
     format=match.arg(tolower(format),c("html","rmd"))

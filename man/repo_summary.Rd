@@ -3,12 +3,12 @@
 \alias{repo_summary}
 \title{Produce summary of repository configuration}
 \usage{
-repo_summary(repo_config, file, format = "html")
+repo_summary(repo_config, file = tempfile(), format = "html")
 }
 \arguments{
 \item{repo_config}{data.frame: configuration as returned by read_repo_config}
 
-\item{file}{string: path to file to write summary to}
+\item{file}{string: path to file to write summary to. A temporary file is used by default}
 
 \item{format}{string: produce HTML ("html") or Rmarkdown ("Rmd") file?}
 }
