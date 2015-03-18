@@ -267,6 +267,39 @@
      "postprocess":"gunzip",
      "access_function":"",
      "data_group":"Derived layers"
+    },
+    {"name":"NCEP-DOE Reanalysis 2 6-hourly data",
+     "description":"NCEP-DOE Reanalysis 2 is an improved version of the NCEP Reanalysis I model that fixed errors and updated paramterizations of of physical processes. The 6-hourly data is the original output time resolution.",
+     "reference":"http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis2.html",
+     "source_urls":"ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2/",
+     "do_sync":false,
+     "method":"wget",
+     "method_flags":"--recursive --no-parent",
+     "postprocess":"",
+     "access_function":"",
+     "data_group":"Reanalysis"
+    },
+    {"name":"NCEP-DOE Reanalysis 2 daily averages",
+     "description":"NCEP-DOE Reanalysis 2 is an improved version of the NCEP Reanalysis I model that fixed errors and updated paramterizations of of physical processes. Daily averages are calculated from the 6-hourly model output.",
+     "reference":"http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis2.html",
+     "source_urls":"ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2.dailyavgs/",
+     "do_sync":false,
+     "method":"wget",
+     "method_flags":"--recursive --no-parent",
+     "postprocess":"",
+     "access_function":"",
+     "data_group":"Reanalysis"
+    },
+    {"name":"NCEP-DOE Reanalysis 2 monthly averages",
+     "description":"NCEP-DOE Reanalysis 2 is an improved version of the NCEP Reanalysis I model that fixed errors and updated paramterizations of of physical processes. Monthly averages are calculated from the 6-hourly model output.",
+     "reference":"http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis2.html",
+     "source_urls":"ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis2.derived/",
+     "do_sync":false,
+     "method":"wget",
+     "method_flags":"--recursive --no-parent",
+     "postprocess":"",
+     "access_function":"",
+     "data_group":"Reanalysis"
     }
 ]
 }
