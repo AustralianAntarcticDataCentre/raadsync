@@ -152,6 +152,18 @@
      "access_function":"readbathy",
      "data_group":"Topography"
     },
+    {"name":"Kerguelen Plateau Bathymetric Grid 2010",
+     "description":"This data replaces the digital elevation model (DEM) for the Kerguelen Plateau region produced in 2005 (Sexton 2005). The revised grid has been gridded at a grid pixel resolution of 0.001-arc degree (about 100 m). The new grid utilised the latest data sourced from ship-based multibeam and singlebeam echosounder surveys, and satellite remotely-sensed data. Report Reference: Beaman, R.J. and O'Brien, P.E., 2011. Kerguelen Plateau bathymetric grid, November 2010. Geoscience Australia, Record, 2011/22, 18 pages.",
+     "reference":"http://www.ga.gov.au/metadata-gateway/metadata/record/gcat_71552",
+     "source_urls":"http://ftt.jcu.edu.au/deepreef/kergdem/gmt/kerg_dem_gmt.zip",
+     "comment":"",
+     "do_sync":true,
+     "method":"wget",
+     "method_flags":"--recursive --no-parent",
+     "postprocess":"unzip",
+     "access_function":"readbathy",
+     "data_group":"Topography"
+    },
     {"name":"NOAA Optimum Interpolation 1/4 Degree Daily Sea Surface Temperature Analysis",
      "description":"Sea surface temperature at 0.25 degree daily resolution, from 1-Sep-1981 to present",
      "reference": "http://www.ncdc.noaa.gov/oa/climate/research/sst/oi-daily-information.php",
