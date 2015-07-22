@@ -187,7 +187,7 @@
      "method":"wget",
      "method_flags":"--recursive --no-parent",
      "postprocess":"unzip",
-     "access_function":"readbathy",
+     "access_function":"",
      "data_group":"Topography"
     },
     {"name":"NOAA Optimum Interpolation 1/4 Degree Daily Sea Surface Temperature Analysis",
