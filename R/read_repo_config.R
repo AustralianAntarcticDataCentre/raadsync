@@ -178,9 +178,14 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
         cat("\nReference: ",repo_config$reference[k],"\n",file=rmd_file,append=TRUE)
         this_citation=repo_config$citation[k]
         if (is.null(this_citation) || is.na(this_citation) || this_citation=="") {
-            this_citation="See reference"
+            this_citation="No citation details provided; see reference"
         }
         cat("\nCitation: ",this_citation,"\n",file=rmd_file,append=TRUE)
+        this_license=repo_config$license[k]
+        if (is.null(this_license) || is.na(this_license) || this_license=="") {
+            this_license="No license details provided; see reference"
+        }
+        cat("\nLicense: ",this_license,"\n",file=rmd_file,append=TRUE)
         thisfun=repo_config$access_function[k]
         if (is.null(thisfun) || is.na(thisfun) || thisfun=="") { thisfun="none registered" }
         cat("\nAssociated access functions: ",thisfun,"\n",file=rmd_file,append=TRUE)
