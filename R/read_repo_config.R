@@ -183,7 +183,7 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
         cat("\nCitation: ",this_citation,"\n",file=rmd_file,append=TRUE)
         this_license=repo_config$license[k]
         if (is.null(this_license) || is.na(this_license) || this_license=="") {
-            this_license="No license details provided; see reference"
+            this_license="No formal license details provided; see reference"
         }
         cat("\nLicense: ",this_license,"\n",file=rmd_file,append=TRUE)
         thisfun=repo_config$access_function[k]
