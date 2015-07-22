@@ -170,15 +170,20 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     last_group="blah"
     for (k in 1:nrow(repo_config)) {
         if (last_group!=repo_config$data_group[k]) {
-            cat("## Data group: ",repo_config$data_group[k],"\n",file=rmd_file,append=TRUE)
+            cat("\n## Data group: ",repo_config$data_group[k],"\n",file=rmd_file,append=TRUE)
         }
         last_group=repo_config$data_group[k]
-        cat("### ",repo_config$name[k],"\n",file=rmd_file,append=TRUE)
+        cat("\n### ",repo_config$name[k],"\n",file=rmd_file,append=TRUE)
         cat("\n",repo_config$description[k],"\n",file=rmd_file,append=TRUE)
         cat("\nReference: ",repo_config$reference[k],"\n",file=rmd_file,append=TRUE)
+        this_citation=repo_config$citation[k]
+        if (is.null(this_citation) || is.na(this_citation) || this_citation=="") {
+            this_citation="See reference"
+        }
+        cat("\nCitation: ",this_citation,"\n",file=rmd_file,append=TRUE)
         thisfun=repo_config$access_function[k]
-        if (is.na(thisfun) || thisfun=="") thisfun="none registered"
-        cat("\nAssociated access functions: ",repo_config$access_function[k],"\n",file=rmd_file,append=TRUE)
+        if (is.null(thisfun) || is.na(thisfun) || thisfun=="") { thisfun="none registered" }
+        cat("\nAssociated access functions: ",thisfun,"\n",file=rmd_file,append=TRUE)
         cat("\nIs currently synchronized: ",repo_config$do_sync[k],"\n",file=rmd_file,append=TRUE)
     }
 
