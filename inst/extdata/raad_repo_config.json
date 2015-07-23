@@ -1,5 +1,5 @@
 {"global":[{
-    "wget_flags":"--progress=dot:mega",
+    "wget_flags":"--progress=dot:giga",
     "http_proxy":"",
     "ftp_proxy":"",
     "local_file_root":"",
