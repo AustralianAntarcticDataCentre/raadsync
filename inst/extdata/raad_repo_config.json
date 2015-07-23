@@ -460,6 +460,19 @@
      "postprocess":"",
      "access_function":"",
      "data_group":"Reanalysis"
+    },
+    {"name":"World Ocean Atlas 2009",
+     "description":"World Ocean Atlas 2009 (WOA09) is a set of objectively analyzed (1 degree grid) climatological fields of in situ temperature, salinity, dissolved oxygen, Apparent Oxygen Utilization (AOU), percent oxygen saturation, phosphate, silicate, and nitrate at standard depth levels for annual, seasonal, and monthly compositing periods for the World Ocean. It also includes associated statistical fields of observed oceanographic profile data interpolated to standard depth levels on both 1 degree and 5 degree grids",
+     "reference":"http://www.nodc.noaa.gov/OC5/WOA09/pr_woa09.html",
+     "citation":"Citation for WOA09 Temperature: Locarnini, R. A., A. V. Mishonov, J. I. Antonov, T. P. Boyer, and H. E. Garcia, 2010. World Ocean Atlas 2009, Volume 1: Temperature. S. Levitus, Ed. NOAA Atlas NESDIS 68, U.S. Government Printing Office, Washington, D.C., 184 pp.\nCitation for WOA09 Salinity: Antonov, J. I., D. Seidov, T. P. Boyer, R. A. Locarnini, A. V. Mishonov, and H. E. Garcia, 2010. World Ocean Atlas 2009, Volume 2: Salinity. S. Levitus, Ed. NOAA Atlas NESDIS 69, U.S. Government Printing Office, Washington, D.C., 184 pp.\nCitation for WOA09 Oxygen: Garcia, H. E., R. A. Locarnini, T. P. Boyer, and J. I. Antonov, 2010. World Ocean Atlas 2009, Volume 3: Dissolved Oxygen, Apparent Oxygen Utilization, and Oxygen Saturation. S. Levitus, Ed. NOAA Atlas NESDIS 70, U.S. Government Printing Office, Washington, D.C., 344 pp.\nCitation for WOA09 Nutrients: Garcia, H. E., R. A. Locarnini, T. P. Boyer, and J. I. Antonov, 2010. World Ocean Atlas 2009, Volume 4: Nutrients (phosphate, nitrate, silicate). S. Levitus, Ed. NOAA Atlas NESDIS 71, U.S. Government Printing Office, Washington, D.C., 398 pp.",
+     "license":"",
+     "source_urls":"ftp://ftp.nodc.noaa.gov/pub/data.nodc/woa/WOA09/NetCDFdata/",
+     "do_sync":false,
+     "method":"wget",
+     "method_flags":"--recursive --no-parent",
+     "postprocess":"",
+     "access_function":"",
+     "data_group":"Oceanographic"
     }
 ]
 }
