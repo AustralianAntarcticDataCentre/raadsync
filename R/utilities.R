@@ -22,7 +22,9 @@ directory_from_url=function(this_url) {
     this_url=sub("^(http|https|ftp)://","",this_url)
     this_url=sub(":","+",this_url) ## port
     ## discard anything after the last trailing slash if it includes asterisks (is a file mask)
-    sub("/[^/]*\\*[^/]*$","/",this_url)
+    ##sub("/[^/]*\\*[^/]*$","/",this_url)
+    ## discard anything at all after the last trailing slash
+    paste0(dirname(this_url),"/")
 }
 
 find_changed_files=function(file_list_before,file_list_after,filename_pattern=".*") {
@@ -69,22 +71,25 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
                    suppressWarnings(warning("")) ## clear last.warning message
                    ## unzip will put files in the current directory by default, so we need to extract the target directory for this file
                    target_dir<-dirname(thisf)
+##cat(sprintf("\nWe are in %s\n",getwd()))
+##cat(sprintf("thisf is: %s\n",thisf))
                    tryCatch({ unzipped_files<-unzip(thisf,list=TRUE) ## get list of files in archive
+##cat("unzipped files: ")
+##cat(str(unzipped_files),"\n")
+                              files_to_extract<-unzipped_files$Name
                               if (!overwrite) {
                                   ## extract only files that don't exist
-                                  files_to_extract<-unzipped_files$Name[!file.exists(file.path(target_dir,unzipped_files$Name))]
-                                  if (length(files_to_extract)>0) {
-                                      cat(sprintf('extracting %d files into %s ... ',length(files_to_extract),target_dir))
-                                      unzip(thisf,files=files_to_extract,exdir=target_dir) ## now actually unzip them
-                                      was_ok<-is.null(last.warning[[1]]) && all(file.info(files_to_extract)$size>0)
-                                  } else {
-                                      cat(sprintf('no new files to extract (not overwriting existing files) ... '))
-                                      was_ok<-TRUE
-                                  }
-                              } else {
+                                  files_to_extract<-files_to_extract[!file.exists(file.path(target_dir,files_to_extract))]
+                              }
+##cat("files to extract: ")
+##cat(str(files_to_extract),"\n")
+                              if (length(files_to_extract)>0) {
                                   cat(sprintf('extracting %d files into %s ... ',length(files_to_extract),target_dir))
-                                  unzip(thisf,exdir=target_dir) ## now actually unzip them
-                                  was_ok<-is.null(last.warning[[1]]) && all(file.info(unzipped_files)$size>0)
+                                  unzip(thisf,files=files_to_extract,exdir=target_dir) ## now actually unzip them
+                                  was_ok<-is.null(last.warning[[1]]) && all(file.info(files_to_extract)$size>0)
+                              } else {
+                                  cat(sprintf('no new files to extract (not overwriting existing files) ... '))
+                                  was_ok<-TRUE
                               }
                               cat("done.\n")
                           },
