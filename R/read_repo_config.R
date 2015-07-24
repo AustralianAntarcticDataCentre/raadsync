@@ -195,6 +195,7 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     if (format=="html") {
         ## knit to html
         knit2html(rmd_file,output=sub("Rmd$","md",rmd_file))
+        file.remove(sub("Rmd$","md",rmd_file)) ## don't need this intermediate file
         sub("Rmd$","html",rmd_file)
     } else {
         rmd_file
