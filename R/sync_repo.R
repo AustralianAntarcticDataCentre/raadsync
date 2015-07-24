@@ -50,11 +50,16 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
         for (si in 1:length(this_dataset$source_urls[[1]])) {
             ## iterate through source_urls
             this_dataset$source_url=this_dataset$source_urls[[1]][[si]]
+            cat(sprintf("\n---\nProcessing source_url: %s\n",this_dataset$source_url))
             ## take snapshot of this directory before we start syncing
             this_path_no_trailing_sep=sub("[\\/]$","",directory_from_url(this_dataset$source_url))
-            if (verbose) cat(sprintf(" building file list ... "))
+            if (verbose) {
+                cat(sprintf(" this dataset path is: %s\n",this_path_no_trailing_sep))
+                cat(sprintf(" building file list ... "))
+            }
             file_pattern=sub(".*/","",this_dataset$source_url)
             if (nchar(file_pattern)<1) file_pattern=NULL
+            if (this_dataset$method=="aadc_portal") { file_pattern=NULL } ## set to null so that file_list_* (below) searches the data directory
             file_list_before=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
             if (file.exists(this_path_no_trailing_sep)) {
                 ## in some cases this points directly to a file
@@ -62,9 +67,24 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
                 temp=temp[!temp$isdir,]
                 if (nrow(temp)>0) { file_list_before=rbind(file_list_before,temp) }
             }
+##cat("file list before:\n")
+##cat(str(file_list_before),"\n")
             if (verbose) cat(sprintf("done.\n"))
             if (this_dataset$method=="wget") {
                 do_wget(build_wget_call(this_dataset),this_dataset)
+            } else if (this_dataset$method=="aadc_portal") {
+                ## clumsy way to get around AADC portal file-renaming issue
+                ## e.g. if we ask for http://www1.data.antarctica.gov.au/aadc/portal/download_file.cfm?file_id=1234
+                ## then we get local file named www1.data.antarctica.gov.au/aadc/portal/download_file.cfm@file_id=1234 or similar
+                ## if we set --content-disposition then the file name is read from the http header, but we lose the directory structure
+                ##  (the file is placed in the local_file_root directory)
+                setwd(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))
+                if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
+                    this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
+                }
+                do_wget(build_wget_call(this_dataset),this_dataset)
+                setwd(this_dataset$local_file_root)
+                ## note that unzipping of files with method aadc_portal is odd, if there are multiple source_urls defined. The second and after will get unzipped multiple times
             } else if (exists(this_dataset$method,mode="function")) {
                 ## dispatch to custom handler
                 if (verbose) cat(sprintf(" using custom handler \"%s\"\n",this_dataset$method))
@@ -75,7 +95,7 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
             }
 
             ## snapshot after syncing
-            if (verbose) cat(sprintf(" building post-download file list ... "))
+            if (verbose) cat(sprintf(" building post-download file list of %s ... ",this_path_no_trailing_sep))
             file_list_after=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE))
             if (file.exists(this_path_no_trailing_sep)) {
                 ## in some cases this points directly to a file
@@ -83,8 +103,9 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
                 temp=temp[!temp$isdir,]
                 if (nrow(temp)>0) { file_list_after=rbind(file_list_after,temp) }
             }
+##cat("file list after:\n")
+##cat(str(file_list_after),"\n")
             if (verbose) cat(sprintf("done.\n"))
-
             ## postprocessing
             pp=this_dataset$postprocess
             if (is.list(pp) && length(pp)==1) {
