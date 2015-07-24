@@ -163,6 +163,7 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     cat("---\ntitle: \"Summary of raadsync repository\"\ndate: \"",date(),"\"\noutput:\n  html_document:\n    toc: true\n    theme: cerulean\n    highlight: default\n---\n\n",file=rmd_file,append=FALSE)
 
     cat("Summary of raadsync repository\n========\n",file=rmd_file,append=TRUE)
+    cat("\nLast updated: ",format(Sys.time()),"\n",file=rmd_file,append=TRUE)
 
     repo_config$data_group[repo_config$data_group==""]=NA ## so that arrange puts them last
     repo_config=arrange(repo_config,data_group)
