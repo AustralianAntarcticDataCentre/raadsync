@@ -68,16 +68,17 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
 
     if (grepl("\\.L3m_",this_url)) {
         ## mapped file
-        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3m)_([[:upper:][:digit:]]+)_(.*?)_(9|4)(km)?\\.bz2")
+        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3m)_([[:upper:][:digit:]]+)_(.*?)_(9|4)(km)?\\.(bz2|nc)")
         ## e.g. [1,] "http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2002359.L3m_DAY_CHL_chlor_a_9km"
         ## [,2] [,3]      [,4]  [,5]  [,6]          [,7]
         ## "A"  "2002359" "L3m" "DAY" "CHL_chlor_a" "9"
         url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
         colnames(url_parts)=c("full_url","platform","date","type","timeperiod","parm","spatial","spatial_unit")
     } else if (grepl("\\.L3b_",this_url)) {
-        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3b)_([[:upper:][:digit:]]+)_(.*?)\\.bz2")
+        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3b)_([[:upper:][:digit:]]+)_(.*?)\\.(bz2|nc)")
         ## http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2
         ## e.g. [1,] "http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2" "A"  "20090322009059" "L3b" "MO" "KD490"
+        ## http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2015016.L3b_DAY_RRS.nc
         url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
         colnames(url_parts)=c("full_url","platform","date","type","timeperiod","parm")
     } else {
