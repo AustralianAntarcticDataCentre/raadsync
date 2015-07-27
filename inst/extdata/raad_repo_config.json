@@ -184,7 +184,7 @@
      "source_urls":"http://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/netcdf/",
      "do_sync":false,
      "method":"wget",
-     "method_flags":"--recursive --no-parent --accept=\"*gmt4*,*.txt\"",
+     "method_flags":"--recursive --no-parent --accept=\"*gdal*,*.txt\"",
      "comment":"",
      "postprocess":"gunzip",
      "access_function":"readtopo",
