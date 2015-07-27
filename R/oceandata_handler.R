@@ -30,7 +30,17 @@ oceandata=function(dataset) {
             ## replace existing if server copy newer than local copy
             ## use checksum rather than dates for this
             if (this_exists) {
-                download_this=digest(file=this_fullfile,algo="sha1")!=this$checksum
+                existing_checksum=NULL
+                if (.Platform$OS.type=="unix") {
+                    ## try using openssl, since it's faster than digest for these files
+                    try({ temptxt<-system(paste0("openssl sha1 ",this_fullfile),intern=TRUE)
+                          existing_checksum=gsub("^.*=\\s+","",temptxt)
+                      },silent=TRUE)
+                }
+                if (is.null(existing_checksum)) {
+                    existing_checksum=digest(file=this_fullfile,algo="sha1")
+                }
+                download_this=existing_checksum!=this$checksum
             }
         } else {
             download_this=TRUE
