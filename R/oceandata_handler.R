@@ -30,7 +30,17 @@ oceandata=function(dataset) {
             ## replace existing if server copy newer than local copy
             ## use checksum rather than dates for this
             if (this_exists) {
-                download_this=digest(file=this_fullfile,algo="sha1")!=this$checksum
+                existing_checksum=NULL
+                if (.Platform$OS.type=="unix") {
+                    ## try using openssl, since it's faster than digest for these files
+                    try({ temptxt<-system(paste0("openssl sha1 ",this_fullfile),intern=TRUE)
+                          existing_checksum=gsub("^.*=\\s+","",temptxt)
+                      },silent=TRUE)
+                }
+                if (is.null(existing_checksum)) {
+                    existing_checksum=digest(file=this_fullfile,algo="sha1")
+                }
+                download_this=existing_checksum!=this$checksum
             }
         } else {
             download_this=TRUE
@@ -68,16 +78,17 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
 
     if (grepl("\\.L3m_",this_url)) {
         ## mapped file
-        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3m)_([[:upper:][:digit:]]+)_(.*?)_(9|4)(km)?\\.bz2")
+        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3m)_([[:upper:][:digit:]]+)_(.*?)_(9|4)(km)?\\.(bz2|nc)")
         ## e.g. [1,] "http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2002359.L3m_DAY_CHL_chlor_a_9km"
         ## [,2] [,3]      [,4]  [,5]  [,6]          [,7]
         ## "A"  "2002359" "L3m" "DAY" "CHL_chlor_a" "9"
         url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
         colnames(url_parts)=c("full_url","platform","date","type","timeperiod","parm","spatial","spatial_unit")
     } else if (grepl("\\.L3b_",this_url)) {
-        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3b)_([[:upper:][:digit:]]+)_(.*?)\\.bz2")
+        url_parts=str_match(this_url,".*getfile/([ASTC])([[:digit:]]+)\\.(L3b)_([[:upper:][:digit:]]+)_(.*?)\\.(bz2|nc)")
         ## http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2
         ## e.g. [1,] "http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2" "A"  "20090322009059" "L3b" "MO" "KD490"
+        ## http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2015016.L3b_DAY_RRS.nc
         url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
         colnames(url_parts)=c("full_url","platform","date","type","timeperiod","parm")
     } else {
