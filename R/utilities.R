@@ -24,7 +24,7 @@ directory_from_url=function(this_url) {
     ## discard anything after the last trailing slash if it includes asterisks (is a file mask)
     ##sub("/[^/]*\\*[^/]*$","/",this_url)
     ## discard anything at all after the last trailing slash
-    paste0(dirname(this_url),"/")
+    sub("/[^/]*$","/",this_url)
 }
 
 find_changed_files=function(file_list_before,file_list_after,filename_pattern=".*") {
