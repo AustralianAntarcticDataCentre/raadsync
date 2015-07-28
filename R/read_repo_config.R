@@ -189,6 +189,10 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
         cat("\nLicense: ",this_license,"\n",file=rmd_file,append=TRUE)
         thisfun=repo_config$access_function[k]
         if (is.null(thisfun) || is.na(thisfun) || thisfun=="") { thisfun="none registered" }
+        temp=file.path(repo_config$local_file_root[[k]],sapply(repo_config$source_urls[[k]],directory_from_url))
+        temp=gsub("\\\\","/",temp)
+        temp=unique(gsub("/+","/",temp))
+        cat("\nLocal file system path:\n",paste(paste0("- ",temp),sep="\n",collapse="\n"),"\n",file=rmd_file,append=TRUE,sep="")
         cat("\nAssociated access functions: ",thisfun,"\n",file=rmd_file,append=TRUE)
         cat("\nIs currently synchronized: ",repo_config$do_sync[k],"\n",file=rmd_file,append=TRUE)
     }
@@ -196,7 +200,7 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     if (format=="html") {
         ## knit to html
         knit2html(rmd_file,output=sub("Rmd$","md",rmd_file))
-        file.remove(sub("Rmd$","md",rmd_file)) ## don't need this intermediate file
+        suppressWarnings(file.remove(sub("Rmd$","md",rmd_file))) ## don't need this intermediate file
         sub("Rmd$","html",rmd_file)
     } else {
         rmd_file
