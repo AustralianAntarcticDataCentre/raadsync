@@ -22,6 +22,9 @@ oceandata=function(dataset) {
         this=myfiles[idx,]
         this_url=paste0("http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/",this$filename) ## full URL
         this_fullfile=oceandata_url_mapper(this_url) ## where local copy will go
+        if (is.null(this_fullfile)) {
+            next
+        }
         this_exists=file.exists(this_fullfile)
         download_this=!this_exists
         if (dataset$clobber==0) {
@@ -95,29 +98,34 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
         stop("not a L3 binned or mapped file")
     }
     this_year=substr(url_parts$date,1,4)
-    switch(url_parts$type,
-           L3m={ this_parm_folder<-sapply(parm_str,function(z){ grepl(paste0("^",z,"$"),url_parts$parm) })
-                 this_parm_folder<-parm[which(this_parm_folder)]
-                 out<-paste("oceandata.sci.gsfc.nasa.gov",platform_map[[url_parts$platform]],"Mapped",timeperiod_map[[url_parts$timeperiod]],paste0(url_parts$spatial,"km"),this_parm_folder,sep=sep)
-                 if (url_parts$timeperiod %in% c("8D","DAY","R32")) {
-                     out<-paste(out,this_year,sep=sep)
-                 }
-                 if (!path_only) {
-                     out<-paste(out,basename(this_url),sep=sep)
-                 } else {
-                     out<-paste0(out,sep) ## trailing path separator
-                 }
-                },
-           L3b={ this_doy<-substr(url_parts$date,5,7)
-                 out<-paste("oceandata.sci.gsfc.nasa.gov",platform_map[[url_parts$platform]],"L3BIN",this_year,this_doy,sep=sep)
-                 if (!path_only) {
-                     out<-paste(out,basename(this_url),sep=sep)
-                 } else {
-                     out<-paste0(out,sep) ## trailing path separator
-                 }
-             },
-           stop("unrecognized file type: ",url_parts$type,"\n",str(url_parts))
-           )
+    if (is.na(url_parts$type)) {
+        warning("unrecognized URL pattern",this_url,", ignoring")
+        out=NULL
+    } else {
+        switch(url_parts$type,
+               L3m={ this_parm_folder<-sapply(parm_str,function(z){ grepl(paste0("^",z,"$"),url_parts$parm) })
+                     this_parm_folder<-parm[which(this_parm_folder)]
+                     out<-paste("oceandata.sci.gsfc.nasa.gov",platform_map[[url_parts$platform]],"Mapped",timeperiod_map[[url_parts$timeperiod]],paste0(url_parts$spatial,"km"),this_parm_folder,sep=sep)
+                     if (url_parts$timeperiod %in% c("8D","DAY","R32")) {
+                         out<-paste(out,this_year,sep=sep)
+                     }
+                     if (!path_only) {
+                         out<-paste(out,basename(this_url),sep=sep)
+                     } else {
+                         out<-paste0(out,sep) ## trailing path separator
+                     }
+                 },
+               L3b={ this_doy<-substr(url_parts$date,5,7)
+                     out<-paste("oceandata.sci.gsfc.nasa.gov",platform_map[[url_parts$platform]],"L3BIN",this_year,this_doy,sep=sep)
+                     if (!path_only) {
+                         out<-paste(out,basename(this_url),sep=sep)
+                     } else {
+                         out<-paste0(out,sep) ## trailing path separator
+                     }
+                 },
+               stop("unrecognized file type: ",url_parts$type,"\n",str(url_parts))
+               )
+    }
     out
 }
 
