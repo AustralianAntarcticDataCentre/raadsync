@@ -71,6 +71,7 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
         }
         if (!is.null(pp) && pp %in% c(NA,"NA")) pp=NULL
         pp=tolower(pp)
+        pp=Filter(nchar,pp) ## drop empty entries
         this_path_no_trailing_sep=sub("[\\/]$","",directory_from_url(this_dataset$source_url))
         if (verbose) {
             cat(sprintf(" this dataset path is: %s\n",this_path_no_trailing_sep))
