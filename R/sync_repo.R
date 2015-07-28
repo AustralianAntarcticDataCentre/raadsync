@@ -63,25 +63,38 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
         ## iterate through source_urls
         this_dataset$source_url=this_dataset$source_urls[[1]][[si]]
         cat(sprintf("\n---\nProcessing source_url: %s\n",this_dataset$source_url))
-        ## take snapshot of this directory before we start syncing
+
+        ## postprocessing
+        pp=this_dataset$postprocess
+        if (is.list(pp) && length(pp)==1) {
+            pp=pp[[1]] ## may get char vector embedded in single-element list
+        }
+        if (!is.null(pp) && pp %in% c(NA,"NA")) pp=NULL
+        pp=tolower(pp)
         this_path_no_trailing_sep=sub("[\\/]$","",directory_from_url(this_dataset$source_url))
         if (verbose) {
             cat(sprintf(" this dataset path is: %s\n",this_path_no_trailing_sep))
-            cat(sprintf(" building file list ... "))
         }
         file_pattern=sub(".*/","",this_dataset$source_url)
         if (nchar(file_pattern)<1) file_pattern=NULL
         if (this_dataset$method=="aadc_portal") { file_pattern=NULL } ## set to null so that file_list_* (below) searches the data directory
-        file_list_before=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
-        if (file.exists(this_path_no_trailing_sep)) {
-            ## in some cases this points directly to a file
-            temp=file.info(this_path_no_trailing_sep)
-            temp=temp[!temp$isdir,]
-            if (nrow(temp)>0) { file_list_before=rbind(file_list_before,temp) }
+        ## build file list if postprocessing required
+        if (length(pp)>0) {
+            ## take snapshot of this directory before we start syncing
+            if (verbose) {
+                cat(sprintf(" building file list ... "))
+            }
+            file_list_before=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
+            if (file.exists(this_path_no_trailing_sep)) {
+                ## in some cases this points directly to a file
+                temp=file.info(this_path_no_trailing_sep)
+                temp=temp[!temp$isdir,]
+                if (nrow(temp)>0) { file_list_before=rbind(file_list_before,temp) }
+            }
+            ##cat("file list before:\n")
+            ##cat(str(file_list_before),"\n")
+            if (verbose) cat(sprintf("done.\n"))
         }
-        ##cat("file list before:\n")
-        ##cat(str(file_list_before),"\n")
-        if (verbose) cat(sprintf("done.\n"))
         if (this_dataset$method=="wget") {
             do_wget(build_wget_call(this_dataset),this_dataset)
         } else if (this_dataset$method=="aadc_portal") {
@@ -105,30 +118,23 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             stop("unsupported method ",this_dataset$method," specified")
         }
 
-        ## snapshot after syncing
-        if (verbose) cat(sprintf(" building post-download file list of %s ... ",this_path_no_trailing_sep))
-        file_list_after=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE))
-        if (file.exists(this_path_no_trailing_sep)) {
-            ## in some cases this points directly to a file
-            temp=file.info(this_path_no_trailing_sep)
-            temp=temp[!temp$isdir,]
-            if (nrow(temp)>0) { file_list_after=rbind(file_list_after,temp) }
+        ## build file list if postprocessing required
+        if (length(pp)>0) {
+            if (verbose) { cat(sprintf(" building post-download file list of %s ... ",this_path_no_trailing_sep)) }
+            file_list_after=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE))
+            if (file.exists(this_path_no_trailing_sep)) {
+                ## in some cases this points directly to a file
+                temp=file.info(this_path_no_trailing_sep)
+                temp=temp[!temp$isdir,]
+                if (nrow(temp)>0) { file_list_after=rbind(file_list_after,temp) }
+            }
+            ##cat("file list after:\n")
+            ##cat(str(file_list_after),"\n")
+            if (verbose) cat(sprintf("done.\n"))
         }
-        ##cat("file list after:\n")
-        ##cat(str(file_list_after),"\n")
-        if (verbose) cat(sprintf("done.\n"))
-        ## postprocessing
-        pp=this_dataset$postprocess
-        if (is.list(pp) && length(pp)==1) {
-            pp=pp[[1]] ## may get char vector embedded in single-element list
-        }
-        if (!is.null(pp) && pp %in% c(NA,"NA")) pp=NULL
-        pp=tolower(pp)
-
         ## decompression behaviour: for *_delete, unconditionally decompress all compressed files and then delete them
         ## for gunzip/bunzip2 (which can only contain a single file), decompress only if .gz/.bz2 file has changed
         ## for unzip (which can contain multiple files), decompress all if the zip file has changed, or if there are any files present in the zip file that don't exist in decompressed form
-
         if (length(pp)>0) {
             for (i in 1:length(pp)) {
                 if (pp[i]=="unzip_delete") {
