@@ -104,6 +104,9 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             ## then we get local file named www1.data.antarctica.gov.au/aadc/portal/download_file.cfm@file_id=1234 or similar
             ## if we set --content-disposition then the file name is read from the http header, but we lose the directory structure
             ##  (the file is placed in the local_file_root directory)
+            if (!dir.exists(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))) {
+                dir.create(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"),recursive=TRUE)
+            }
             setwd(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))
             if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
                 this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
