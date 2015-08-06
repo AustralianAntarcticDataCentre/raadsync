@@ -107,12 +107,17 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             if (!file.exists(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))) {
                 dir.create(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"),recursive=TRUE)
             }
-            setwd(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))
+            ## change 6-Aug-2015: EXCEPT ON WINDOWS directory structure now seems to be retained, so don't need to change dir here
+            if (.Platform$OS.type=="windows") {
+                setwd(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))
+            }
             if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
                 this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
             }
             do_wget(build_wget_call(this_dataset),this_dataset)
-            setwd(this_dataset$local_file_root)
+            if (.Platform$OS.type=="windows") {
+                setwd(this_dataset$local_file_root)
+            }
             ## note that unzipping of files with method aadc_portal is odd, if there are multiple source_urls defined. The second and after will get unzipped multiple times
         } else if (exists(this_dataset$method,mode="function")) {
             ## dispatch to custom handler
