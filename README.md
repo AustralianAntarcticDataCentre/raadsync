@@ -1,6 +1,10 @@
 raadsync
 ========
 
+An R package for maintaining a library of satellite-derived and similar environmental data.
+
+See [RAADTools](https://github.com/AustralianAntarcticDivision/raadtools) for reading, plotting, and manipulating these data.
+
 ## Installing
 
 ```{r}
