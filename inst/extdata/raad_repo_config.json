@@ -115,7 +115,7 @@
      "comment":"",
      "do_sync":false,
      "method":"wget",
-     "method_flags":"--recursive --level=inf --timestamping --accept=\"asi*.hdf\" --no-parent",
+     "method_flags":"--recursive --level=inf --timestamping --accept=\"asi*.hdf\" --accept=\"asi*.png\" --accept=\"asi*.tif\" --no-parent",
      "postprocess":"",
      "access_function":"",
      "data_group":"Sea ice"
