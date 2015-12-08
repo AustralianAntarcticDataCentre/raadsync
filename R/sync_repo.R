@@ -100,16 +100,16 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             do_wget(build_wget_call(this_dataset),this_dataset)
         } else if (this_dataset$method=="aadc_portal") {
             ## clumsy way to get around AADC portal file-renaming issue
-            ## e.g. if we ask for http://www1.data.antarctica.gov.au/aadc/portal/download_file.cfm?file_id=1234
-            ## then we get local file named www1.data.antarctica.gov.au/aadc/portal/download_file.cfm@file_id=1234 or similar
+            ## e.g. if we ask for http://data.aad.gov.au/aadc/portal/download_file.cfm?file_id=1234
+            ## then we get local file named data.aad.gov.au/aadc/portal/download_file.cfm@file_id=1234 or similar
             ## if we set --content-disposition then the file name is read from the http header, but we lose the directory structure
             ##  (the file is placed in the local_file_root directory)
-            if (!file.exists(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))) {
-                dir.create(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"),recursive=TRUE)
+            if (!file.exists(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal"))) {
+                dir.create(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal"),recursive=TRUE)
             }
             ## change 6-Aug-2015: EXCEPT ON WINDOWS directory structure now seems to be retained, so don't need to change dir here
             if (.Platform$OS.type=="windows") {
-                setwd(file.path(this_dataset$local_file_root,"www1.data.antarctica.gov.au","aadc","portal"))
+                setwd(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal"))
             }
             if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
                 this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
