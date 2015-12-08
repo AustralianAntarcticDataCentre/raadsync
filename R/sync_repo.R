@@ -104,20 +104,17 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             ## then we get local file named data.aad.gov.au/aadc/portal/download_file.cfm@file_id=1234 or similar
             ## if we set --content-disposition then the file name is read from the http header, but we lose the directory structure
             ##  (the file is placed in the local_file_root directory)
-            if (!file.exists(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal"))) {
-                dir.create(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal"),recursive=TRUE)
+            ## Change 8-Dec-2015 - change into subdirectory named by file_id of file, so that we don't get files mixed together in data.aad.gov.au/aadc/portal/
+            this_file_id=str_match(this_dataset$source_url,"file_id=(\\d+)")[2]
+            if (!file.exists(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id))) {
+                dir.create(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id),recursive=TRUE)
             }
-            ## change 6-Aug-2015: EXCEPT ON WINDOWS directory structure now seems to be retained, so don't need to change dir here
-            if (.Platform$OS.type=="windows") {
-                setwd(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal"))
-            }
+            setwd(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id))
             if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
                 this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
             }
             do_wget(build_wget_call(this_dataset),this_dataset)
-            if (.Platform$OS.type=="windows") {
-                setwd(this_dataset$local_file_root)
-            }
+            setwd(this_dataset$local_file_root)
             ## note that unzipping of files with method aadc_portal is odd, if there are multiple source_urls defined. The second and after will get unzipped multiple times
         } else if (exists(this_dataset$method,mode="function")) {
             ## dispatch to custom handler
