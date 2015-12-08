@@ -171,7 +171,7 @@
      "comment":"--no-check-certificate flag to wget until certificate authority problem fixed",
      "do_sync":false,
      "method":"aadc_portal",
-     "method_flags":"--recursive --no-parent --no-check-certificate",
+     "method_flags":"--no-check-certificate",
      "postprocess":"unzip",
      "access_function":"",
      "data_group":"Sea ice"
@@ -254,7 +254,7 @@
      "source_urls":"https://data.aad.gov.au/aadc/portal/download_file.cfm?file_id=4494",
      "do_sync":false,
      "method":"aadc_portal",
-     "method_flags":"--recursive --no-parent --no-check-certificate",
+     "method_flags":"--no-check-certificate",
      "comment":"--no-check-certificate flag to wget until certificate authority problem fixed",
      "postprocess":"unzip",
      "access_function":"",

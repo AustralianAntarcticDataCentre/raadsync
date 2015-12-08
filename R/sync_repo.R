@@ -105,6 +105,7 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             ## if we set --content-disposition then the file name is read from the http header, but we lose the directory structure
             ##  (the file is placed in the local_file_root directory)
             ## Change 8-Dec-2015 - change into subdirectory named by file_id of file, so that we don't get files mixed together in data.aad.gov.au/aadc/portal/
+            ## note that this requires the "--recursive" flag NOT TO BE USED
             this_file_id=str_match(this_dataset$source_url,"file_id=(\\d+)")[2]
             if (!file.exists(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id))) {
                 dir.create(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id),recursive=TRUE)
@@ -112,6 +113,13 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             setwd(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id))
             if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
                 this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
+            }
+            ## these two should be doable in a single regex, but done separately until I can figure it out
+            if (grepl("--recursive ",this_dataset$method_flags,ignore.case=TRUE)) {
+                this_dataset$method_flags=str_trim(sub("--recursive ","",this_dataset$method_flags))
+            }
+            if (grepl("--recursive$",this_dataset$method_flags,ignore.case=TRUE)) {
+                this_dataset$method_flags=str_trim(sub("--recursive$","",this_dataset$method_flags))
             }
             do_wget(build_wget_call(this_dataset),this_dataset)
             setwd(this_dataset$local_file_root)
