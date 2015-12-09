@@ -1,8 +1,8 @@
 Package: raadsync
 Type: Package
 Title: Data Repository Synchronisation.
-Version: 0.251
-Date: 2015-12-08
+Version: 0.26
+Date: 2015-12-09
 Author: Ben Raymond, Michael Sumner
 Maintainer: Ben Raymond <ben.raymond@aad.gov.au>
 Description: Tools to get and maintain a data repository, particularly for the
