@@ -1,23 +1,20 @@
 Package: raadsync
 Type: Package
-Title: Data Repository Synchronisation.
-Version: 0.27
+Title: Data Repository Synchronisation
+Version: 0.28
 Date: 2015-12-09
 Author: Ben Raymond, Michael Sumner
 Maintainer: Ben Raymond <ben.raymond@aad.gov.au>
-Description: Tools to get and maintain a data repository, particularly for the
-    raadtools package.
+Description: Tools to get and maintain a data repository, particularly for the raadtools package
 License: MIT
 Imports:
     digest,
     R.utils,
+    R.cache,
     jsonlite,
     stringr,
     plyr,
     assertthat,
     knitr
-Suggests:
-    R.rsp
 LazyLoad: yes
-VignetteBuilder: R.rsp
 RoxygenNote: 5.0.1

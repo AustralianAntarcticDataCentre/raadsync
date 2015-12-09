@@ -33,16 +33,7 @@ oceandata=function(dataset) {
             ## replace existing if server copy newer than local copy
             ## use checksum rather than dates for this
             if (this_exists) {
-                existing_checksum=NULL
-                if (.Platform$OS.type=="unix") {
-                    ## try using openssl, since it's faster than digest for these files
-                    try({ temptxt<-system(paste0("openssl sha1 ",this_fullfile),intern=TRUE)
-                          existing_checksum=gsub("^.*=\\s+","",temptxt)
-                      },silent=TRUE)
-                }
-                if (is.null(existing_checksum)) {
-                    existing_checksum=digest(file=this_fullfile,algo="sha1")
-                }
+                existing_checksum=calculate_checksum(this_fullfile)
                 download_this=existing_checksum!=this$checksum
             }
         } else {
@@ -54,6 +45,8 @@ oceandata=function(dataset) {
             dummy$source_url=this_url
             wget_call=build_wget_call(dummy)
             do_wget(wget_call,dataset)
+            ## recalculate checksum so that cache gets updated
+            blah=calculate_checksum(this_fullfile)
         } else {
             if (this_exists) {
                 cat(sprintf("not downloading %s, local copy exists with identical checksum\n",this$filename))
@@ -62,6 +55,25 @@ oceandata=function(dataset) {
     }
 
 }
+
+## actual function to calculate SHA1 checksums
+do_calculate_checksum=function(file) {
+    checksum=NULL
+    if (.Platform$OS.type=="unix") {
+        ## try using openssl, since it's faster than digest for these files
+        try({ temptxt<-system(paste0("openssl sha1 ",file),intern=TRUE)
+            checksum=gsub("^.*=\\s+","",temptxt)
+        },silent=TRUE)
+    }
+    if (is.null(checksum)) {
+        checksum=digest(file=file,algo="sha1")
+    }
+    checksum
+}
+
+## and a memoized version, that will use a cached result if available (which will be much faster for large files)
+calculate_checksum=addMemoization(do_calculate_checksum)
+
 
 oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
     ## take getfile URL and return (relative) path to put the file into
