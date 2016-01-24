@@ -66,7 +66,7 @@ function (dataset)
         for (thisday in 1:366) {
             dummy = dataset
             dummy$source_url = paste0("http://podaac-w10n.jpl.nasa.gov/w10n/allData/ghrsst/data/L4/GLOB/UKMO/OSTIA/2016",
-                thisyear, "/", sprintf("%03d", thisday), "/")
+              sprintf("%03d", thisday), "/")
             wget_call = build_wget_call(dummy)
             do_wget(wget_call, dataset)
         }
