@@ -41,3 +41,34 @@ ghrsst=function(dataset) {
         }
     }
 }
+
+
+
+ghrsst2 <- 
+function (dataset)
+{
+    if (grepl("JPL/MUR/?$", dataset$source_url)) {
+        yearlist = seq(from = 2002, to = as.numeric(format(Sys.Date(),
+            "%Y")), by = 1)
+    }
+    else {
+        yearlist = as.numeric(basename(dataset$source_url))
+    }
+    if (!grepl("--recursive", dataset$method_flags, ignore.case = TRUE)) {
+        dataset$method_flags = paste(dataset$method_flags, "--recursive",
+            sep = " ")
+    }
+    if (!grepl("--no-parent", dataset$method_flags, ignore.case = TRUE)) {
+        dataset$method_flags = paste(dataset$method_flags, "--no-parent",
+            sep = " ")
+    }
+    for (thisyear in yearlist) {
+        for (thisday in 1:366) {
+            dummy = dataset
+            dummy$source_url = paste0("http://podaac-w10n.jpl.nasa.gov/w10n/allData/ghrsst/data/L4/GLOB/UKMO/OSTIA/2016",
+                thisyear, "/", sprintf("%03d", thisday), "/")
+            wget_call = build_wget_call(dummy)
+            do_wget(wget_call, dataset)
+        }
+    }
+}
