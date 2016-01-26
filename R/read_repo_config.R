@@ -66,6 +66,14 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
     #       "2"={ if (!missing(fileurl)) { output_file_name=basename(fileurl); wget_call=paste(wget_call,"-O",output_file_name,sep=" ") } }
     #             ## for "2" and url supplied, do nothing. this may not work as expected if we are downloading a file rather than a directory. wget -r (with no -nc or -N flags) should overwrite an existing file, but wget a_url may not
     #       )
+    ## helper function: returns TRUE if object is a list and all NULLs
+    is_list_nulls=function(z) {
+        out=FALSE
+        if (is.list(z)) {
+            out=all(sapply(z,is.null))
+        }
+        out
+    }
     ## copy datasets from lcf to dcf
     if (!is.null(lcf)) {
         for (k in 1:nrow(lcf$datasets)) {
@@ -74,8 +82,8 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
                 ## this datasets exists in dcf
                 ## update any values in dcf with lcf ones
                 for (parm in names(lcf$datasets[k,])) {
-                    if (!is.na(lcf$datasets[k,][[parm]])) {
-                        ## if this parm in the local config dataframe is NA, then it wasn't set in the local config file
+                    if (!(is.na(lcf$datasets[k,][[parm]]) || is.null(lcf$datasets[k,][[parm]]) || is_list_nulls(lcf$datasets[k,][[parm]]))) {
+                        ## if this parm in the local config dataframe is NA or NULL, or a list of NULLS, then it wasn't set in the local config file
                         dcf$datasets[idx,][[parm]]=lcf$datasets[k,][[parm]]
                     }
                 }
