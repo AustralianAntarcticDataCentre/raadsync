@@ -88,7 +88,8 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
     platform_map=list(Q="Aquarius",C="CZCS",H="HICO",M="MERIS",A="MODISA",T="MODIST",O="OCTS",S="SeaWiFS",V="VIIRS")
     timeperiod_map=list(WC="8D_Climatology","8D"="8Day",YR="Annual",CU="Cumulative",DAY="Daily",MO="Monthly",MC="Monthly_Climatology",R32="Rolling_32_Day",SNSP="Seasonal",SNSU="Seasonal",SNAU="Seasonal",SNWI="Seasonal",SCSP="Seasonal_Climatology",SCSU="Seasonal_Climatology",SCAU="Seasonal_Climatology",SCWI="Seasonal_Climatology")
 
-    parm=c("Kd","NSST","Rrs","SST","SST4","angstrom","aot","cdom","chlor","ipar","nflh","par","pic","poc")
+    ## this needs to be a table, read from a config file
+    parm=c("Kd","NSST","Rrs","SST","SST4","angstrom","aot","cdom","chlor","ipar","nflh","par","pic","poc", "par")
     parm_str=c("KD490_Kd_490","NSST","RRS_Rrs_[[:digit:]]+","SST","SST4","RRS_angstrom","RRS_aot_869","CDOM_cdom_index","CHL_chlor_a","FLH_ipar","FLH_nflh","PAR_par","PIC_pic","POC_poc",  ## these from MODISA: probably need to add other parms from other platforms?
                "NPP_PAR_par") ## VIIRS
     if (grepl("\\.L3m_",this_url)) {
