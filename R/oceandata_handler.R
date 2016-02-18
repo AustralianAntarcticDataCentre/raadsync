@@ -133,7 +133,7 @@ oceandata_parameter_map=function(platform,urlparm) {
                     O=,
                     S=,
                     T=,
-                    A=list("KD490_Kd_490"="Kd", ## MODIS, SeaWiFS
+                    A=list("KD490_Kd_490"="Kd",
                            "NSST"="NSST",
                            "RRS_Rrs_[[:digit:]]+"="Rrs",
                            "SST"="SST",
@@ -154,9 +154,9 @@ oceandata_parameter_map=function(platform,urlparm) {
                            "PIC_pic"="pic",
                            "POC_poc"="poc",
                            "LAND_NDVI","NDVI"),
-                    V=list("NPP_KD490_Kd_490"="KD490", ## VIIRS
+                    V=list("NPP_KD490_Kd_490"="KD490",
                            "NPP_CHL_chl_ocx","CHL",
-                           ##??CHLOCI
+                           ##??CHLOCI appears in the browse structure but has no files
                            ##?? GSM
                            "NPP_IOP_.*"="IOP",
                            "NPP_PAR_par"="par",
@@ -167,6 +167,7 @@ oceandata_parameter_map=function(platform,urlparm) {
                            ##?? ZLEE
                            )
                    ,stop("platform ",platform," not recognised"))
+    ## parm_map is a named list, in which the names are strings defining a parameter name or regexp. The corresponding list entry is the folder name to use for that parameter
     this_parm_folder<-sapply(names(parm_map),function(z){ grepl(paste0("^",z,"$"),urlparm) })
     unlist(parm_map[this_parm_folder])
 }
@@ -180,11 +181,6 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
     assert_that(is.string(this_url))
     assert_that(is.flag(path_only))
     assert_that(is.string(sep))
-    ## map various things from URL to path
-    ## this needs to be a table, read from a config file
-    #parm=c("Kd","NSST","Rrs","SST","SST4","angstrom","aot","cdom","chlor","ipar","nflh","par","pic","poc", "par")
-    #parm_str=c("KD490_Kd_490","NSST","RRS_Rrs_[[:digit:]]+","SST","SST4","RRS_angstrom","RRS_aot_869","CDOM_cdom_index","CHL_chlor_a","FLH_ipar","FLH_nflh","PAR_par","PIC_pic","POC_poc",  ## these from MODISA: probably need to add other parms from other platforms?
-    #           "NPP_PAR_par") ## VIIRS
     if (grepl("\\.L3m_",this_url)) {
         ## mapped file
         url_parts=str_match(this_url,"/([ASTCV])([[:digit:]]+)\\.(L3m)_([[:upper:][:digit:]]+)_(.*?)_(9|4)(km)?\\.(bz2|nc)")
