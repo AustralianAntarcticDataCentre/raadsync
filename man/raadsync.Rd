@@ -12,6 +12,6 @@
 Australian Antarctic Data Centre \email{aadc@aad.gov.au}
 }
 \references{
-\url{http://www1.data.antarctica.gov.au}
+\url{http://.data.aad.gov.au}
 }
 
