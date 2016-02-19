@@ -8,13 +8,15 @@ For example, \url{http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PA
 map to \url{http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
 The \code{oceandata_platform_map} function maps the URL platform component ("V" in this example) to the corresponding directory name ("VIIRS")}
 \usage{
-oceandata_platform_map(abbrev)
+oceandata_platform_map(abbrev, error_no_match = FALSE)
 }
 \arguments{
 \item{abbrev}{string: the platform abbreviation from the URL (e.g. "Q" for Aquarius, "M" for MODIS-Aqua)}
+
+\item{error_no_match}{logical: should an error be thrown if the abbrev is not matched?}
 }
 \value{
-Either the platform name string corresponding to the abbreviation, if \code{abbrev} supplied, or a named list of all abbreviations and platform name strings if \code{abbrev} is missing
+Either the platform name string corresponding to the abbreviation, if \code{abbrev} supplied, or a data.frame of all abbreviations and platform name strings if \code{abbrev} is missing
 }
 \description{
 Satellite platform names and abbreviations used in Oceancolor URLs and file names

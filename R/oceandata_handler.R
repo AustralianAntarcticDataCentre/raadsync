@@ -81,16 +81,32 @@ calculate_checksum=addMemoization(do_calculate_checksum)
 #' map to \url{http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
 #' The \code{oceandata_platform_map} function maps the URL platform component ("V" in this example) to the corresponding directory name ("VIIRS")
 #' @param abbrev string: the platform abbreviation from the URL (e.g. "Q" for Aquarius, "M" for MODIS-Aqua)
+#' @param error_no_match logical: should an error be thrown if the abbrev is not matched?
 #' @references \url{http://oceandata.sci.gsfc.nasa.gov/}
-#' @return Either the platform name string corresponding to the abbreviation, if \code{abbrev} supplied, or a named list of all abbreviations and platform name strings if \code{abbrev} is missing
+#' @return Either the platform name string corresponding to the abbreviation, if \code{abbrev} supplied, or a data.frame of all abbreviations and platform name strings if \code{abbrev} is missing
 #' @seealso \code{\link{oceandata_timeperiod_map}} \code{\link{oceandata_parameter_map}}
 #' @export
-oceandata_platform_map=function(abbrev) {
-    allp=list(Q="Aquarius",C="CZCS",H="HICO",M="MERIS",A="MODISA",T="MODIST",O="OCTS",S="SeaWiFS",V="VIIRS")
+oceandata_platform_map=function(abbrev,error_no_match=FALSE) {
+    rawtext="abbrev,platform
+Q,Aquarius
+C,CZCS
+H,HICO
+M,MERIS
+A,MODISA
+T,MODIST
+O,OCTS
+S,SeaWiFS
+V,VIIRS"
+    allp=read.table(text=rawtext,stringsAsFactors=FALSE,sep=",",header=TRUE)
+    ##allp=list(Q="Aquarius",C="CZCS",H="HICO",M="MERIS",A="MODISA",T="MODIST",O="OCTS",S="SeaWiFS",V="VIIRS")
     if (missing(abbrev)) {
         allp
     } else {
-        allp[abbrev]
+        out=allp$platform[allp$abbrev==abbrev]
+        if (error_no_match & length(out)<1) {
+            stop("oceandata URL platform token ",abbrev," not recognized")
+        }
+        out
     }
 }
 
@@ -101,16 +117,78 @@ oceandata_platform_map=function(abbrev) {
 #' The \code{oceandata_timeperiod_map} function maps the URL time period component ("DAY" in this example) to the corresponding directory name ("Daily")
 #' @references \url{http://oceandata.sci.gsfc.nasa.gov/}
 #' @param abbrev string: the time period abbreviation from the URL (e.g. "DAY" for daily, "SCSP" for seasonal spring climatology)
-#' @return Either the time period string corresponding to the abbreviation, if \code{abbrev} supplied, or a named list of all abbreviations and time period strings if \code{abbrev} is missing
+#' @param error_no_match logical: should an error be thrown if the abbrev is not matched?
+#' @return Either the time period string corresponding to the abbreviation, if \code{abbrev} supplied, or a data.frame of all abbreviations and time period strings if \code{abbrev} is missing
 #' @seealso \code{\link{oceandata_platform_map}} \code{\link{oceandata_parameter_map}}
 #' @export
-oceandata_timeperiod_map=function(abbrev) {
-    alltp=list(WC="8D_Climatology","8D"="8Day",YR="Annual",CU="Cumulative",DAY="Daily",MO="Monthly",MC="Monthly_Climatology",R32="Rolling_32_Day",SNSP="Seasonal",SNSU="Seasonal",SNAU="Seasonal",SNWI="Seasonal",SCSP="Seasonal_Climatology",SCSU="Seasonal_Climatology",SCAU="Seasonal_Climatology",SCWI="Seasonal_Climatology")
+oceandata_timeperiod_map=function(abbrev,error_no_match=FALSE) {
+    rawtext="abbrev,time_period
+WC,8D_Climatology
+8D,8Day
+YR,Annual
+CU,Cumulative
+DAY,Daily
+MO,Monthly
+MC,Monthly_Climatology
+R32,Rolling_32_Day
+SNSP,Seasonal
+SNSU,Seasonal
+SNAU,Seasonal
+SNWI,Seasonal
+SCSP,Seasonal_Climatology
+SCSU,Seasonal_Climatology
+SCAU,Seasonal_Climatology
+SCWI,Seasonal_Climatology"
+
+    alltp=read.table(text=rawtext,stringsAsFactors=FALSE,sep=",",header=TRUE)
     if (missing(abbrev)) {
         alltp
     } else {
-        alltp[abbrev]
+        out=alltp$time_period[alltp$abbrev==abbrev]
+        if (error_no_match & length(out)<1) {
+            stop("oceandata URL timeperiod token ",abbrev," not recognized")
+        }
+        out
     }
+}
+
+
+#' rdname oceandata_parameter_map
+#' @export
+oceandata_parameters=function(platform) {
+    rawtext="platform,parameter,pattern
+SATCO,Kd,KD490_Kd_490
+SATCO,NSST,NSST
+SATCO,Rrs,RRS_Rrs_[[:digit:]]+
+SATCO,SST,SST
+SATCO,SST4,SST4
+SATCO,a,IOP_a_.*
+SATCO,adg,IOP_adg_.*
+SATCO,angstrom,RRS_angstrom
+SATCO,aot,RRS_aot_[[:digit:]]+
+SATCO,aph,IOP_aph_.*
+SATCO,bb,IOP_bb_.*
+SATCO,bbp,IOP_bbp_.*
+SATCO,cdom,CDOM_cdom_index
+SATCO,chl,CHL_chl_ocx
+SATCO,chlor,CHL_chlor_a
+SATCO,ipar,FLH_ipar
+SATCO,nflh,FLH_nflh
+SATCO,par,PAR_par
+SATCO,pic,PIC_pic
+SATCO,poc,POC_poc
+S,NDVI,LAND_NDVI
+V,KD490,NPP_KD490_Kd_490
+V,CHL,NPP_CHL_chl_ocx
+V,IOP,NPP_IOP_.*
+V,par,NPP_PAR_par
+V,pic,NPP_PIC_pic
+V,poc,NPP_POC_poc
+V,RRS,NPP_RRS_.*"
+    ## note some VIIRS parameters that appear in the browse file structure but with no associated files, and so have not been coded here:
+    ## CHLOCI GSM QAA ZLEE
+    ## platforms yet to do: "Q","H" (are different folder structure to the others)
+    read.table(text=rawtext,stringsAsFactors=FALSE,sep=",",header=TRUE)
 }
 
 
@@ -119,59 +197,44 @@ oceandata_timeperiod_map=function(abbrev) {
 #' For example, \url{http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} or \url{http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} (obtained from the OceanColor visual browser or file search facility)
 #' map to \url{http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
 #' The \code{oceandata_parameter_map} function maps the URL parameter component ("NPP_PAR_par" in this example) to the corresponding directory name ("par").
-#' Note: the list of parameters is not yet complete.
 #' @references \url{http://oceandata.sci.gsfc.nasa.gov/}
 #' @param urlparm string: the parameter component of the URL (e.g. "KD490_Kd_490" for MODIS diffuse attenuation coefficient at 490 nm)
 #' @param platform string: the platform abbreviation (currently one of "Q" (Aquarius), "C" (CZCS), "H" (HICO), "M" (MERIS), "A" (MODISA), "T" (MODIST), "O" (OCTS), "S" (SeaWiFS), "V" (VIIRS)
-#' @return Either the directory string corresponding to the URL code, if \code{abbrev} supplied, or a named list of all URL regexps and corresponding directory name strings if \code{urlparm} is missing
+#' @param error_no_match logical: should an error be thrown if the urlparm is not matched?
+#' @return Either the directory string corresponding to the URL code, if \code{abbrev} supplied, or a data.frame of all URL regexps and corresponding directory name strings if \code{urlparm} is missing
 #' @export
-oceandata_parameter_map=function(platform,urlparm) {
-    if (missing(platform)) stop("platform must be specified")
-    ## platforms yet to do: "Q","H" (are different folder structure to the others)
-    parm_map=switch(platform,
-                    C=,
-                    O=,
-                    S=,
-                    T=,
-                    A=list("KD490_Kd_490"="Kd",
-                           "NSST"="NSST",
-                           "RRS_Rrs_[[:digit:]]+"="Rrs",
-                           "SST"="SST",
-                           "SST4"="SST4",
-                           "IOP_a_.*"="a",
-                           "IOP_adg_.*"="adg",
-                           "RRS_angstrom"="angstrom",
-                           "RRS_aot_[[:digit:]]+"="aot",
-                           "IOP_aph_.*"="aph",
-                           "IOP_bb_.*"="bb",
-                           "IOP_bbp_.*"="bbp",
-                           "CDOM_cdom_index"="cdom",
-                           "CHL_chl_ocx"="chl",
-                           "CHL_chlor_a"="chlor",
-                           "FLH_ipar"="ipar",
-                           "FLH_nflh"="nflh",
-                           "PAR_par"="par",
-                           "PIC_pic"="pic",
-                           "POC_poc"="poc",
-                           "LAND_NDVI","NDVI"),
-                    V=list("NPP_KD490_Kd_490"="KD490",
-                           "NPP_CHL_chl_ocx","CHL",
-                           ##??CHLOCI appears in the browse structure but has no files
-                           ##?? GSM
-                           "NPP_IOP_.*"="IOP",
-                           "NPP_PAR_par"="par",
-                           "NPP_PIC_pic"="pic",
-                           "NPP_POC_poc"="poc",
-                           ##?? QAA
-                           "NPP_RRS_.*"="RRS"
-                           ##?? ZLEE
-                           )
-                   ,stop("platform ",platform," not recognised"))
-    ## parm_map is a named list, in which the names are strings defining a parameter name or regexp. The corresponding list entry is the folder name to use for that parameter
-    this_parm_folder<-sapply(names(parm_map),function(z){ grepl(paste0("^",z,"$"),urlparm) })
-    unlist(parm_map[this_parm_folder])
+oceandata_parameter_map=function(platform,urlparm,error_no_match=FALSE) {
+    if (missing(platform) || !(is.string(platform) && nchar(platform)==1)) stop("platform must be specified as a one-letter character")
+    parm_map=oceandata_parameters()
+    parm_map=parm_map[grepl(platform,parm_map$platform),]
+    if (!missing(urlparm)) {
+        if (nrow(parm_map)>0) {
+            this_parm_folder=sapply(parm_map$pattern,function(z){ grepl(paste0("^",z,"$"),urlparm) })
+            out=unlist(parm_map$parameter[this_parm_folder])
+        } else {
+            out=as.character(NULL)
+        }
+        if (error_no_match & length(out)<1) {
+            stop("oceandata URL parameter token ",urlparm," not recognized for platform ",platform)
+        }
+        out
+    } else {
+        parm_map
+    }
 }
 
+
+#' Map Oceancolor URL to file path
+#' Oceancolor data file URLs need to be mapped to a file system hierarchy that mirrors the one used on the Oceancolor web site.
+#' For example, \url{http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} or \url{http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} (obtained from the OceanColor visual browser or file search facility)
+#' map to \url{http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc} (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
+#' The \code{oceandata_url_mapper} function maps the URL parameter component ("NPP_PAR_par" in this example) to the corresponding directory name ("par").
+#' @references \url{http://oceandata.sci.gsfc.nasa.gov/}
+#' @param this_url string: the Oceancolor URL, e.g. http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2002359.L3m_DAY_CHL_chlor_a_9km.bz2
+#' @param path_only logical: if TRUE, do not append the file name to the path
+#' @param sep string: the path separator to use
+#' @return Either the directory string corresponding to the URL code, if \code{abbrev} supplied, or a data.frame of all URL regexps and corresponding directory name strings if \code{urlparm} is missing
+#' @export
 oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
     ## take getfile URL and return (relative) path to put the file into
     ## this_url should look like: http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2002359.L3m_DAY_CHL_chlor_a_9km.bz2
@@ -206,8 +269,8 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
     } else {
         switch(url_parts$type,
                L3m={
-                   this_parm_folder=oceandata_parameter_map(url_parts$platform,url_parts$parm)
-                   out<-paste("oceandata.sci.gsfc.nasa.gov",oceandata_platform_map(url_parts$platform),"Mapped",oceandata_timeperiod_map(url_parts$timeperiod),paste0(url_parts$spatial,"km"),this_parm_folder,sep=sep)
+                   this_parm_folder<-oceandata_parameter_map(url_parts$platform,url_parts$parm,error_no_match=TRUE)
+                   out<-paste("oceandata.sci.gsfc.nasa.gov",oceandata_platform_map(url_parts$platform,error_no_match=TRUE),"Mapped",oceandata_timeperiod_map(url_parts$timeperiod,error_no_match=TRUE),paste0(url_parts$spatial,"km"),this_parm_folder,sep=sep)
                    if (url_parts$timeperiod %in% c("8D","DAY","R32")) {
                        out<-paste(out,this_year,sep=sep)
                    }
@@ -218,7 +281,7 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
                    }
                  },
                L3b={ this_doy<-substr(url_parts$date,5,7)
-                     out<-paste("oceandata.sci.gsfc.nasa.gov",oceandata_platform_map(url_parts$platform),"L3BIN",this_year,this_doy,sep=sep)
+                     out<-paste("oceandata.sci.gsfc.nasa.gov",oceandata_platform_map(url_parts$platform,error_no_match=TRUE),"L3BIN",this_year,this_doy,sep=sep)
                      if (!path_only) {
                          out<-paste(out,basename(this_url),sep=sep)
                      } else {
