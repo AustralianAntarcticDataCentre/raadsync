@@ -11,7 +11,7 @@ The \code{oceandata_platform_map} function maps the URL platform component ("V" 
 oceandata_platform_map(abbrev, error_no_match = FALSE)
 }
 \arguments{
-\item{abbrev}{string: the platform abbreviation from the URL (e.g. "Q" for Aquarius, "M" for MODIS-Aqua)}
+\item{abbrev}{character: the platform abbreviation from the URL (e.g. "Q" for Aquarius, "M" for MODIS-Aqua)}
 
 \item{error_no_match}{logical: should an error be thrown if the abbrev is not matched?}
 }

@@ -11,7 +11,7 @@ The \code{oceandata_parameter_map} function maps the URL parameter component ("N
 oceandata_parameter_map(platform, urlparm, error_no_match = FALSE)
 }
 \arguments{
-\item{platform}{string: the platform abbreviation (currently one of "Q" (Aquarius), "C" (CZCS), "H" (HICO), "M" (MERIS), "A" (MODISA), "T" (MODIST), "O" (OCTS), "S" (SeaWiFS), "V" (VIIRS)}
+\item{platform}{character: the platform abbreviation (currently one of "Q" (Aquarius), "C" (CZCS), "H" (HICO), "M" (MERIS), "A" (MODISA), "T" (MODIST), "O" (OCTS), "S" (SeaWiFS), "V" (VIIRS)}
 
 \item{urlparm}{string: the parameter component of the URL (e.g. "KD490_Kd_490" for MODIS diffuse attenuation coefficient at 490 nm)}
 
