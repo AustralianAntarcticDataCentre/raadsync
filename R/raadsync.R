@@ -10,4 +10,5 @@
 #' @importFrom knitr knit2html
 #' @importFrom digest digest
 #' @importFrom jsonlite fromJSON validate
+#' @importFrom utils read.table str unzip
 NULL

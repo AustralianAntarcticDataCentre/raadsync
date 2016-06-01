@@ -154,6 +154,9 @@ SCWI,Seasonal_Climatology"
 
 
 #' rdname oceandata_parameter_map
+#'
+#' @param platform V for VIIRs, S for SeaWiFS, etc.
+#'
 #' @export
 oceandata_parameters=function(platform) {
     rawtext="platform,parameter,pattern
