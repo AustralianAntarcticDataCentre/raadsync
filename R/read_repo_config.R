@@ -174,7 +174,12 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     cat("\nLast updated: ",format(Sys.time()),"\n",file=rmd_file,append=TRUE)
 
     repo_config$data_group[repo_config$data_group==""]=NA ## so that arrange puts them last
-    repo_config=arrange(repo_config,data_group)
+    
+    ## this causes "undefined global variable" note in check
+    ## could replace with dplyr::arrange(repo_config, "data_group") 
+    ## but not sure about non-NSE for plyr??  MDS
+   # repo_config=arrange(repo_config,data_group)
+    repo_config <- repo_config[order(repo_config$data_group), ]
     repo_config$data_group[is.na(repo_config$data_group)]=""
     last_group="blah"
     for (k in 1:nrow(repo_config)) {
@@ -208,6 +213,7 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     if (format=="html") {
         ## knit to html
         knit2html(rmd_file,output=sub("Rmd$","md",rmd_file))
+        
         suppressWarnings(file.remove(sub("Rmd$","md",rmd_file))) ## don't need this intermediate file
         sub("Rmd$","html",rmd_file)
     } else {
