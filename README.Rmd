@@ -1,26 +1,38 @@
+---
+output: github_document
+---
 
 [![Travis-CI Build Status](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync.svg?branch=master)](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+
+
 An R package for maintaining a library of satellite-derived and similar environmental data.
 
 See [RAADTools](https://github.com/AustralianAntarcticDivision/raadtools) for reading, plotting, and manipulating these data.
 
-Installing
-----------
+## Installing
 
-``` r
+```{r,eval=FALSE}
 install.packages("devtools")
 library(devtools)
 install_github("AustralianAntarcticDataCentre/raadsync")
 ```
 
-Configuration files
--------------------
+## Configuration files
 
 Configuration files are used to tell `raadsync` which data sets to synchronise, along with settings such as the location of the data directory. A default configuration file is provided as part of the package:
 
-``` r
+```{r,eval=FALSE}
 system.file("extdata", "raad_repo_config.json", package = "raadsync")
 ```
 
@@ -32,7 +44,7 @@ There are two different ways to manage configurations:
 
 Use the default configuration with local adjustments (recommended if you intend to mostly use datasets already defined in the default file). Create a local configuration file that alters or adds to the default configuration. Start with the example local configuration file provided in the package:
 
-``` r
+```{r,eval=FALSE}
 file.copy(system.file("extdata","sample_local_config.json", package = "raadsync"),
           "/path/to/your/local_config.json")
 ```
@@ -41,18 +53,19 @@ Edit `/path/to/your/local_config.json` to suit your needs.
 
 Then to use this configuration in combination with the default configuration file:
 
-``` r
+```{r,eval=FALSE}
 cf = read_repo_config("/path/to/your/local_config.json")
 sync_repo(cf)
 ```
+
 
 ### 2. Custom
 
 Use your own configuration file entirely. You can use the default configuration file as a starting point.
 
-When using solely your own configuration file, specify NULL for the `default_config_file` parameter in `read_repo_config`:
+  When using solely your own configuration file, specify NULL for the `default_config_file` parameter in `read_repo_config`:
 
-``` r
+```{r,eval=FALSE}
 cf = read_repo_config("/path/to/your/config.json", NULL)
 sync_repo(cf)
 ```
