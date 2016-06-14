@@ -2,6 +2,16 @@
 #'
 #' This configuration file specifies global settings that control the synchronization behaviour in general, and provides details of each of the datasets in the repository. Any global configuration setting can also be set at the dataset level. A dataset inherits any global configuration settings not overridden in its own configuration. It is suggested that a user only makes changes to the local_config_file, because package updates may change the default configuration file provided with the package. To use only a local_config_file, specify NULL for the default_config_file (and vice-versa).
 #'
+#' The global settings include the following parameters:
+#' \itemize{
+#' \item wget_flags string: flags to pass to wget (default is "--no-passive-ftp")
+#' \item http_proxy string: http proxy server to use in the form "http://your.proxy.server:8080" (default is no proxy server)
+#' \item ftp_proxy string: ftp proxy server to use in the form "ftp://your.ftp.proxy.server:21" (default is no proxy server)
+#' \item local_file_root string: the path to the data root directory. If the \code{raadtools} library has been installed it defines a default data directory option. This will be used if no local_file_root is supplied in the \code{raadsync} global configuration
+#' \item clobber numeric: 0=do not overwrite existing files, 1=overwrite existing files if the remote copy is newer than the local copy, 2=overwrite existing files unconditionally
+#' \item wait numeric: seconds to wait between downloads (default=0)
+#' }
+#'
 #' Each dataset is specified by the following parameters in the configuration file:
 #' \itemize{
 #' \item name string: dataset name
@@ -93,6 +103,18 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
             }
         }
     }
+
+    ## use local_file_root = getOption("default.datadir") or local_file_root = getOption("raadtools.default.datadir") if not set in config
+    if (is.null(dcf$global$local_file_root) || (is.string(dcf$global$local_file_root) && dcf$global$local_file_root=="")) {
+        if (!is.null(getOption("raadtools.default.datadir"))) {
+            cat(sprintf("Using getOption(\"raadtools.default.datadir\") for local_file_root (value is \"%s\")\n",getOption("raadtools.default.datadir")))
+            dcf$global$local_file_root <- getOption("raadtools.default.datadir")
+        } else if (!is.null(getOption("default.datadir"))) {
+            ## backwards-compatible: raadtools used to use this
+            cat(sprintf("Using getOption(\"default.datadir\") for local_file_root (value is \"%s\")\n",getOption("default.datadir")))
+            dcf$global$local_file_root <- getOption("default.datadir")
+        }
+    }
     ## now check that all entries match what we expect
     assert_that(is.string(dcf$global$local_file_root)) ## just check that it's a string, not that it's a directory
     ## make sure that local_file_root path is in correct form for this system (but don't test its existence)
@@ -174,9 +196,9 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     cat("\nLast updated: ",format(Sys.time()),"\n",file=rmd_file,append=TRUE)
 
     repo_config$data_group[repo_config$data_group==""]=NA ## so that arrange puts them last
-    
+
     ## this causes "undefined global variable" note in check
-    ## could replace with dplyr::arrange(repo_config, "data_group") 
+    ## could replace with dplyr::arrange(repo_config, "data_group")
     ## but not sure about non-NSE for plyr??  MDS
    # repo_config=arrange(repo_config,data_group)
     repo_config <- repo_config[order(repo_config$data_group), ]
@@ -213,7 +235,7 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
     if (format=="html") {
         ## knit to html
         knit2html(rmd_file,output=sub("Rmd$","md",rmd_file))
-        
+
         suppressWarnings(file.remove(sub("Rmd$","md",rmd_file))) ## don't need this intermediate file
         sub("Rmd$","html",rmd_file)
     } else {

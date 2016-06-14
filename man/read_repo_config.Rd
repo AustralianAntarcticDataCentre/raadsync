@@ -17,6 +17,16 @@ read_repo_config(local_config_file,
 This configuration file specifies global settings that control the synchronization behaviour in general, and provides details of each of the datasets in the repository. Any global configuration setting can also be set at the dataset level. A dataset inherits any global configuration settings not overridden in its own configuration. It is suggested that a user only makes changes to the local_config_file, because package updates may change the default configuration file provided with the package. To use only a local_config_file, specify NULL for the default_config_file (and vice-versa).
 }
 \details{
+The global settings include the following parameters:
+\itemize{
+\item wget_flags string: flags to pass to wget (default is "--no-passive-ftp")
+\item http_proxy string: http proxy server to use in the form "http://your.proxy.server:8080" (default is no proxy server)
+\item ftp_proxy string: ftp proxy server to use in the form "ftp://your.ftp.proxy.server:21" (default is no proxy server)
+\item local_file_root string: the path to the data root directory. If the \code{raadtools} library has been installed it defines a default data directory option. This will be used if no local_file_root is supplied in the \code{raadsync} global configuration
+\item clobber numeric: 0=do not overwrite existing files, 1=overwrite existing files if the remote copy is newer than the local copy, 2=overwrite existing files unconditionally
+\item wait numeric: seconds to wait between downloads (default=0)
+}
+
 Each dataset is specified by the following parameters in the configuration file:
 \itemize{
 \item name string: dataset name
