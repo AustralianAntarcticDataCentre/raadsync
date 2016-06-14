@@ -1,7 +1,7 @@
 Package: raadsync
 Type: Package
 Title: Data Repository Synchronisation
-Version: 0.30.9002
+Version: 0.30.9003
 Date: 2016-06-14
 Author: Ben Raymond, Michael Sumner
 Maintainer: Ben Raymond <ben.raymond@aad.gov.au>
@@ -15,7 +15,7 @@ Imports:
     stringr,
     plyr,
     assertthat,
-    knitr
+    rmarkdown
 LazyLoad: yes
 RoxygenNote: 5.0.1
 Suggests: testthat

@@ -175,7 +175,7 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
 #' @return Path to the summary file in HTML or Rmarkdown format
 #'
 #' @export
-repo_summary=function(repo_config,file=tempfile(),format="html") {
+repo_summary=function(repo_config,file=tempfile(fileext=".html"),format="html") {
     assert_that(is.string(file))
     assert_that(is.string(format))
     format=match.arg(tolower(format),c("html","rmd"))
@@ -234,10 +234,10 @@ repo_summary=function(repo_config,file=tempfile(),format="html") {
 
     if (format=="html") {
         ## knit to html
-        knit2html(rmd_file,output=sub("Rmd$","md",rmd_file))
-
-        suppressWarnings(file.remove(sub("Rmd$","md",rmd_file))) ## don't need this intermediate file
-        sub("Rmd$","html",rmd_file)
+        ##knit2html(rmd_file,output=sub("Rmd$","md",rmd_file))
+        ##suppressWarnings(file.remove(sub("Rmd$","md",rmd_file))) ## don't need this intermediate file
+        rmarkdown::render(rmd_file,output_format="html_document",output_file=file)
+        file
     } else {
         rmd_file
     }

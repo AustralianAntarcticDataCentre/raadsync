@@ -7,7 +7,7 @@
 #' @import stringr plyr assertthat
 #' @importFrom R.cache addMemoization
 #' @importFrom R.utils gunzip bunzip2
-#' @importFrom knitr knit2html
+#' @importFrom rmarkdown render
 #' @importFrom digest digest
 #' @importFrom jsonlite fromJSON validate
 #' @importFrom utils read.table str unzip

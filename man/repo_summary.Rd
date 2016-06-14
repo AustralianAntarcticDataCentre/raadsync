@@ -4,7 +4,8 @@
 \alias{repo_summary}
 \title{Produce summary of repository configuration}
 \usage{
-repo_summary(repo_config, file = tempfile(), format = "html")
+repo_summary(repo_config, file = tempfile(fileext = ".html"),
+  format = "html")
 }
 \arguments{
 \item{repo_config}{data.frame: configuration as returned by read_repo_config}
