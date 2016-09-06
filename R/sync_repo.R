@@ -41,10 +41,10 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
         }
     }
     if (!this_dataset$do_sync) {
-        cat(sprintf("\nSkipping dataset (do_sync is FALSE): %s\n----------------------------------------------------------------------------------------------------------\n\n",this_dataset$name))
+        cat(sprintf("\n%s\nSkipping dataset (do_sync is FALSE): %s\n----------------------------------------------------------------------------------------------------------\n\n",base::date(),this_dataset$name))
         return(NULL)
     }
-    cat(sprintf("\nSynchronizing dataset: %s\n----------------------------------------------------------------------------------------------------------\n\n",this_dataset$name))
+    cat(sprintf("\n%s\nSynchronizing dataset: %s\n----------------------------------------------------------------------------------------------------------\n\n",base::date(),this_dataset$name))
     setwd(this_dataset$local_file_root)
 
     ## set proxy env vars
@@ -193,5 +193,5 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             }
         }
     } ## end looping through multiple source urls
+    cat(sprintf("\n%s dataset synchronization complete: %s\n",base::date(),this_dataset$name))
 }
-
