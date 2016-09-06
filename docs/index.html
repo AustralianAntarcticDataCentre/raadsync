@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>Home. raadsync 0.30.9003</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Ben Raymond, Michael Sumner">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">raadsync 0.30.9003</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <div class="row">
+  <div class="span8">
+    <p><a href="https://travis-ci.org/AustralianAntarcticDataCentre/raadsync"><img src="https://travis-ci.org/AustralianAntarcticDataCentre/raadsync.svg?branch=master" alt="Travis-CI Build Status"/></a> <a href="https://ci.appveyor.com/project/AustralianAntarcticDataCentre/raadsync"><img src="https://ci.appveyor.com/api/projects/status/github/AustralianAntarcticDataCentre/raadsync?branch=master&amp;svg=true" alt="AppVeyor Build Status"/></a> <a href="https://codecov.io/github/AustralianAntarcticDataCentre/raadsync?branch=master"><img src="https://img.shields.io/codecov/c/github/AustralianAntarcticDataCentre/raadsync/master.svg" alt="Coverage Status"/></a></p>
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+<p>An R package for maintaining a library of satellite-derived and similar environmental data.</p>
+
+<p>See <a href="https://github.com/AustralianAntarcticDivision/raadtools">RAADTools</a> for reading, plotting, and manipulating these data.</p>
+
+<h2>Installing</h2>
+
+<pre><code class="r">install.packages(&quot;devtools&quot;)
+library(devtools)
+install_github(&quot;AustralianAntarcticDataCentre/raadsync&quot;)
+</code></pre>
+
+<h2>Configuration files</h2>
+
+<p>Configuration files are used to tell <code>raadsync</code> which data sets to synchronise, along with settings such as the location of the data directory. A default configuration file is provided as part of the package:</p>
+
+<pre><code class="r">system.file(&quot;extdata&quot;, &quot;raad_repo_config.json&quot;, package = &quot;raadsync&quot;)
+</code></pre>
+
+<p>You will need to modify this configuration to suit your purposes (in particular, the default configuration sets <code>do_sync</code> to FALSE for all datasets, so it won&#39;t actually synchronise any data until you override one or more of these).</p>
+
+<p>There are two different ways to manage configurations:</p>
+
+<h3>1. Default</h3>
+
+<p>Use the default configuration with local adjustments (recommended if you intend to mostly use datasets already defined in the default file). Create a local configuration file that alters or adds to the default configuration. Start with the example local configuration file provided in the package:</p>
+
+<pre><code class="r">file.copy(system.file(&quot;extdata&quot;,&quot;sample_local_config.json&quot;, package = &quot;raadsync&quot;),
+          &quot;/path/to/your/local_config.json&quot;)
+</code></pre>
+
+<p>Edit <code>/path/to/your/local_config.json</code> to suit your needs.</p>
+
+<p>Then to use this configuration in combination with the default configuration file:</p>
+
+<pre><code class="r">cf = read_repo_config(&quot;/path/to/your/local_config.json&quot;)
+sync_repo(cf)
+</code></pre>
+
+<h3>2. Custom</h3>
+
+<p>Use your own configuration file entirely. You can use the default configuration file as a starting point.</p>
+
+<p>When using solely your own configuration file, specify NULL for the <code>default_config_file</code> parameter in <code>read_repo_config</code>:</p>
+
+<pre><code class="r">cf = read_repo_config(&quot;/path/to/your/config.json&quot;, NULL)
+sync_repo(cf)
+</code></pre>
+
+  </div>
+
+  <div class="span3 offset1 sidebar">
+        <h2>Authors</h2>
+    <ul>
+    </ul>
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
