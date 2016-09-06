@@ -1,5 +1,5 @@
 
-[![Travis-CI Build Status](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync.svg?branch=master)](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync)
+[![Travis-CI Build Status](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync.svg?branch=master)](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/AustralianAntarcticDataCentre/raadsync?branch=master&svg=true)](https://ci.appveyor.com/project/AustralianAntarcticDataCentre/raadsync) [![Coverage Status](https://img.shields.io/codecov/c/github/AustralianAntarcticDataCentre/raadsync/master.svg)](https://codecov.io/github/AustralianAntarcticDataCentre/raadsync?branch=master)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 An R package for maintaining a library of satellite-derived and similar environmental data.

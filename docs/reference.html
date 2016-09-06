@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>Function reference. raadsync 0.30.9003</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Ben Raymond, Michael Sumner">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">raadsync 0.30.9003</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <div class="row">
+  <div class="span8">
+    <h2>Function reference</h2>
+
+    <h3></h3>
+    
+
+    <ul class="index">
+        
+      <li>
+        <code><a href="oceandata_parameter_map.html">oceandata_parameter_map</a></code><br />Parameter names used in Oceancolor URLs and file names
+Oceancolor data file URLs need to be mapped to a file system hierarchy that mirrors the one used on the Oceancolor web site.
+For example, <a href = 'http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> or <a href = 'http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (obtained from the OceanColor visual browser or file search facility)
+map to <a href = 'http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
+The <code>oceandata_parameter_map</code> function maps the URL parameter component (&quot;NPP_PAR_par&quot; in this example) to the corresponding directory name (&quot;par&quot;).</li>
+            
+      <li>
+        <code><a href="oceandata_parameters.html">oceandata_parameters</a></code><br />rdname oceandata_parameter_map</li>
+            
+      <li>
+        <code><a href="oceandata_platform_map.html">oceandata_platform_map</a></code><br />Satellite platform names and abbreviations used in Oceancolor URLs and file names
+Oceancolor data file URLs need to be mapped to a file system hierarchy that mirrors the one used on the Oceancolor web site.
+For example, <a href = 'http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> or <a href = 'http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (obtained from the OceanColor visual browser or file search facility)
+map to <a href = 'http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
+The <code>oceandata_platform_map</code> function maps the URL platform component (&quot;V&quot; in this example) to the corresponding directory name (&quot;VIIRS&quot;)</li>
+            
+      <li>
+        <code><a href="oceandata_timeperiod_map.html">oceandata_timeperiod_map</a></code><br />Time periods and abbreviations used in Oceancolor URLs and file names
+Oceancolor data file URLs need to be mapped to a file system hierarchy that mirrors the one used on the Oceancolor web site.
+For example, <a href = 'http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> or <a href = 'http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (obtained from the OceanColor visual browser or file search facility)
+map to <a href = 'http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
+The <code>oceandata_timeperiod_map</code> function maps the URL time period component (&quot;DAY&quot; in this example) to the corresponding directory name (&quot;Daily&quot;)</li>
+            
+      <li>
+        <code><a href="oceandata_url_mapper.html">oceandata_url_mapper</a></code><br />Map Oceancolor URL to file path
+Oceancolor data file URLs need to be mapped to a file system hierarchy that mirrors the one used on the Oceancolor web site.
+For example, <a href = 'http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceancolor.gsfc.nasa.gov/cgi/l3/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> or <a href = 'http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (obtained from the OceanColor visual browser or file search facility)
+map to <a href = 'http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc'>http://oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc</a> (in the Oceancolor file browse interface). RAADSync will store the local copy of this file as oceandata.sci.gsfc.nasa.gov/VIIRS/Mapped/Daily/9km/par/2016/V2016044.L3m_DAY_NPP_PAR_par_9km.nc
+The <code>oceandata_url_mapper</code> function maps the URL parameter component (&quot;NPP_PAR_par&quot; in this example) to the corresponding directory name (&quot;par&quot;).</li>
+            
+      <li>
+        <code><a href="raadsync.html">raadsync</a></code>(raadsync-package)<br /><span class = "pkg">raadsync</span></li>
+            
+      <li>
+        <code><a href="read_repo_config.html">read_repo_config</a></code><br />Load data repository configuration file</li>
+            
+      <li>
+        <code><a href="repo_summary.html">repo_summary</a></code><br />Produce summary of repository configuration</li>
+            
+      <li>
+        <code><a href="sync_repo.html">sync_repo</a></code><br />Run the data repository synchronisation</li>
+    
+    </ul>
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

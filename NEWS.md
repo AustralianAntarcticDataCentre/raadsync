@@ -1,5 +1,7 @@
 # raadsync dev
 
+* added scaffolding appveyor, coverage, tests
+
 * converted readme to rmd
 
 * imports from utils to satisfy new check rules

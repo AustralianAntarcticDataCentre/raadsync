@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>read_repo_config. raadsync 0.30.9003</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">raadsync 0.30.9003</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Load data repository configuration file</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='read_repo_config.html'>read_repo_config</a></span><span class="keyword">(</span><span class="symbol">local_config_file</span><span class="keyword">,</span>
+  <span class="argument">default_config_file</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/devtools/topics/system.file'>system.file</a></span><span class="keyword">(</span><span class="string">"extdata"</span><span class="keyword">,</span> <span class="string">"raad_repo_config.json"</span><span class="keyword">,</span>
+  <span class="argument">package</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"raadsync"</span><span class="keyword">)</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>local_config_file</dt>
+      <dd>string: file or URL to JSON configuration file.</dd>
+      <dt>default_config_file</dt>
+      <dd>string: file or URL to JSON configuration file. By default, the default_config_file is the one that ships with this package.</dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>This configuration file specifies global settings that control the synchronization behaviour in general, and provides details of each of the datasets in the repository. Any global configuration setting can also be set at the dataset level. A dataset inherits any global configuration settings not overridden in its own configuration. It is suggested that a user only makes changes to the local_config_file, because package updates may change the default configuration file provided with the package. To use only a local_config_file, specify NULL for the default_config_file (and vice-versa).</p>
+
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+
+      <p>The global settings include the following parameters:
+<ul>
+<li> wget_flags string: flags to pass to wget (default is &quot;--no-passive-ftp&quot;)
+</li>
+<li> http_proxy string: http proxy server to use in the form &quot;http://your.proxy.server:8080&quot; (default is no proxy server)
+</li>
+<li> ftp_proxy string: ftp proxy server to use in the form &quot;ftp://your.ftp.proxy.server:21&quot; (default is no proxy server)
+</li>
+<li> local_file_root string: the path to the data root directory. If the <code>raadtools</code> library has been installed it defines a default data directory option. This will be used if no local_file_root is supplied in the <code>raadsync</code> global configuration
+</li>
+<li> clobber numeric: 0=do not overwrite existing files, 1=overwrite existing files if the remote copy is newer than the local copy, 2=overwrite existing files unconditionally
+</li>
+<li> wait numeric: seconds to wait between downloads (default=0)
+</li>
+</ul></p>
+
+      <p>Each dataset is specified by the following parameters in the configuration file:
+<ul>
+<li> name string: dataset name
+</li>
+<li> description string: description
+</li>
+<li> reference string: URL to metadata record or home page for the dataset
+</li>
+<li> source_urls list: list of URLs to the data
+</li>
+<li> do_sync logical: if FALSE this dataset will not be synchronized
+</li>
+<li> method string: the synchronization method (currently only &quot;wget&quot;)
+</li>
+<li> method_flags string: flags to pass to wget (if method==&quot;wget&quot;) or the custom handler (if not)
+</li>
+<li> postprocess string array: operations to apply after all file downloads. Currently &quot;unzip&quot;, &quot;gunzip&quot; (unzip or gunzip but do not delete the compressed copy), &quot;gunzip_delete&quot;, &quot;unzip_delete&quot; (unzip and delete the zipped file), &quot;cleanup &lt;pattern&gt;&quot; (remove any files in local_directory with names matching &lt;pattern&gt;), &quot;cleanup_recursive &lt;pattern&gt;&quot; (as for cleanup but is applied recursively to child directories)
+</li>
+<li> user string: username for access to restricted ftp/http sites
+</li>
+<li> password string: password for access to restricted ftp/http sites
+</li>
+</ul></p>
+
+      <p></p>
+
+    </div>
+      </div>
+  <div class="span4 sidebar">
+    <!-- <ul>
+      <li>read_repo_config</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+
+
+
+
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
