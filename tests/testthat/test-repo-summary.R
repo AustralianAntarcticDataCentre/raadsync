@@ -1,11 +1,11 @@
-
 context("repo summary")
 
+test_that("config file looks OK", {
+  expect_that(  cf <- read_repo_config(local_config_file = NULL), is_a("data.frame"))
+  expect_that(all(cf$do_sync), is_false())
+})
 
 test_that("repo summary is sensible", {
-
-  expect_that(  cf <- read_repo_config(local_config_file = NULL), is_a("data.frame"))
-  
-  expect_that(file.exists(repo_summary(cf)), is_true())
-  expect_that(all(cf$do_sync), is_false())
+    skip_if_not(rmarkdown::pandoc_available(),"skipping repo_summary test because pandoc is not available")
+    expect_that(file.exists(repo_summary(cf)), is_true())
 })
