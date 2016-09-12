@@ -6,6 +6,6 @@ test_that("config file looks OK", {
 })
 
 test_that("repo summary is sensible", {
-    skip_if_not(rmarkdown::pandoc_available(),"skipping repo_summary test because pandoc is not available")
+    skip_if_not(rmarkdown::pandoc_available("1.12.3"),"skipping repo_summary test because pandoc is not available or is not a recent enough version")
     expect_that(file.exists(repo_summary(cf)), is_true())
 })
