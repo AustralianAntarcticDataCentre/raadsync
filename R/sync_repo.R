@@ -171,6 +171,24 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
             ##cat(str(file_list_after),"\n")
             if (verbose) cat(sprintf("done.\n"))
         }
+
+        ## AMPS
+        if (this_dataset$name=="Antarctic Mesoscale Prediction System grib files") {
+            dirlist <- list.dirs(this_path_no_trailing_sep,recursive=FALSE)
+            dirlist <- dirlist[nchar(basename(dirlist))==10] ## just those of the format yyyymmddPP where PP is the prediction time 00 or 12
+            for (i in dirlist) {
+                newdir <- sub("(00|12)$","",i)
+                if (!dir.exists(newdir)) dir.create(newdir)
+                file_list <- dir(i,pattern="\\.(grb|txt)$",full.names=TRUE)
+                if (length(file_list)>0) {
+                    if (verbose) cat(sprintf(" moving %d files from %s to %s ... ",length(file_list),i,newdir))
+                    copy_ok <- sapply(file_list,function(z)file.rename(from=z,to=file.path(newdir,basename(z))))
+                }
+                ## should be no files left in i
+                if (length(dir(i))<1) unlink(i,recursive=TRUE)
+                if (verbose) cat(sprintf("done.\n"))
+            }
+        }
         ## decompression behaviour: for *_delete, unconditionally decompress all compressed files and then delete them
         ## for gunzip/bunzip2 (which can only contain a single file), decompress only if .gz/.bz2 file has changed
         ## for unzip (which can contain multiple files), decompress all if the zip file has changed, or if there are any files present in the zip file that don't exist in decompressed form
