@@ -183,10 +183,10 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
                 if (length(file_list)>0) {
                     if (verbose) cat(sprintf(" moving %d files from %s to %s ... ",length(file_list),i,newdir))
                     copy_ok <- sapply(file_list,function(z)file.rename(from=z,to=file.path(newdir,basename(z))))
+                    if (verbose) cat(sprintf("done.\n"))
                 }
                 ## should be no files left in i
                 if (length(dir(i))<1) unlink(i,recursive=TRUE)
-                if (verbose) cat(sprintf("done.\n"))
             }
         }
         ## decompression behaviour: for *_delete, unconditionally decompress all compressed files and then delete them
