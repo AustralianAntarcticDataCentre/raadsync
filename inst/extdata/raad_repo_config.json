@@ -596,8 +596,8 @@
      "license":"Please cite",
      "comment":"d1,d2 files for hours 000-015 only",
      "do_sync":false,
-     "method":"wget",
-     "method_flags":"--recursive --level=inf --no-parent --accept=\"*d1_f000.grb\" --accept=\"*d1_f003.grb\" --accept=\"*d1_f006.grb\" --accept=\"*d1_f009.grb\" --accept=\"*d1_f012.grb\" --accept=\"*d1_f015.grb\" --accept=\"*d2_f000.grb\" --accept=\"*d2_f003.grb\" --accept=\"*d2_f006.grb\" --accept=\"*d2_f009.grb\" --accept=\"*d2_f012.grb\" --accept=\"*d2_f015.grb\" --accept=\"*.txt\"",
+     "method":"amps",
+     "method_flags":"",
      "postprocess":"",
      "access_function":"",
      "data_group":"Meteorological"

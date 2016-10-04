@@ -11,4 +11,6 @@
 #' @importFrom digest digest
 #' @importFrom jsonlite fromJSON validate
 #' @importFrom utils read.table str unzip
+#' @importFrom xml2 url_absolute
+#' @importFrom rvest html_session jump_to html_attr html_nodes
 NULL
