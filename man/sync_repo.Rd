@@ -13,6 +13,9 @@ sync_repo(config, create_root = FALSE, verbose = TRUE)
 
 \item{verbose}{logical: if TRUE, provide additional progress output}
 }
+\value{
+vector of logical values indicating success of each data source in config. NA indicates that the data source was not run (e.g. do_sync set to FALSE)
+}
 \description{
 Run the data repository synchronisation
 }

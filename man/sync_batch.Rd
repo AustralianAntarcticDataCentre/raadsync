@@ -16,7 +16,7 @@ sync_batch(config, reg, create_root = FALSE, verbose = TRUE)
 \item{verbose}{logical: if TRUE, provide additional progress output}
 }
 \value{
-list, with captured console output from each synchronisation task
+list, with status and captured console output from each synchronisation task
 }
 \description{
 Note that the \code{reg} object should be created with raadsync in the list of packages (see example).

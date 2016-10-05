@@ -6,7 +6,7 @@
 #' @param reg Registry: a BatchJobs registry object
 #' @param create_root logical: should the data root directory be created if it does not exist?
 #' @param verbose logical: if TRUE, provide additional progress output
-#' @return list, with captured console output from each synchronisation task
+#' @return list, with status and captured console output from each synchronisation task
 #'
 #' @examples
 #' \dontrun{
@@ -27,13 +27,13 @@ sync_batch <- function(config,reg,create_root=FALSE,verbose=TRUE) {
     assert_that(is.flag(create_root))
     assert_that(is.flag(verbose))
     ## wrapper function for sync_repo
-    sync_source <- function(rownum,cf) capture.output(sync_repo(cf[rownum,]))
+    sync_source <- function(rownum,cf) {out <- capture.output(status <- sync_repo(cf[rownum,])); list(status=status,output=out) }
     ## map the jobs to the register
     batchMap(reg,sync_source,1:nrow(config),more.args=list(cf=config))
     ## start jobs
     submitJobs(reg)
     waitForJobs(reg)
     results <- reduceResultsList(reg,fun=function(job,res)res)
-    results <- lapply(results,function(z)paste(z,collapse="\n"))
-    results
+    out <- list(status=sapply(results,function(z)z$status),output=lapply(results,function(z)paste(z,collapse="\n")))
+    out
 }

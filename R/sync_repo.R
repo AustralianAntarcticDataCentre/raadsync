@@ -4,9 +4,12 @@
 #' @param create_root logical: should the data root directory be created if it does not exist?
 #' @param verbose logical: if TRUE, provide additional progress output
 #'
+#' @return vector of logical values indicating success of each data source in config. NA indicates that the data source was not run (e.g. do_sync set to FALSE)
+#'
 #' @export
-sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
+sync_repo <- function(config,create_root=FALSE,verbose=TRUE) {
     ## general synchronization handler
+    assert_that(is.data.frame(config))
     assert_that(is.flag(create_root))
     assert_that(is.flag(verbose))
     ## check that wget can be found
@@ -17,18 +20,22 @@ sync_repo=function(config,create_root=FALSE,verbose=TRUE) {
     ## save some current settings: path and proxy env values
     settings=save_current_settings()
     ## iterate through each dataset in turn
+    sync_ok <- rep(as.logical(NA),nrow(config))
     for (di in 1:nrow(config)) {
         tryCatch(
-            do_sync_repo(config[di,],create_root,verbose,settings),
-            error=function(e) cat("\nThere was a problem synchronizing the dataset:",config$name[di],". The error message was:",e$message,"\n")
+            sync_ok[di] <- do_sync_repo(config[di,],create_root,verbose,settings),
+            error=function(e) {
+                sync_ok[di] <- FALSE
+                cat("\nThere was a problem synchronizing the dataset:",config$name[di],". The error message was:",e$message,"\n")
+            }
         )
     }
     restore_settings(settings)
+    sync_ok
 }
 
 
-
-do_sync_repo=function(this_dataset,create_root,verbose,settings) {
+do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
     on.exit({ restore_settings(settings) })
     ## check that the root directory exists
     if (!dir_exists(this_dataset$local_file_root)) {
@@ -42,7 +49,7 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
     }
     if (!this_dataset$do_sync) {
         cat(sprintf("\n%s\nSkipping dataset (do_sync is FALSE): %s\n----------------------------------------------------------------------------------------------------------\n\n",base::date(),this_dataset$name))
-        return(NULL)
+        return(NA)
     }
     cat(sprintf("\n%s\nSynchronizing dataset: %s\n----------------------------------------------------------------------------------------------------------\n\n",base::date(),this_dataset$name))
     setwd(this_dataset$local_file_root)
@@ -237,4 +244,5 @@ do_sync_repo=function(this_dataset,create_root,verbose,settings) {
         }
     } ## end looping through multiple source urls
     cat(sprintf("\n%s dataset synchronization complete: %s\n",base::date(),this_dataset$name))
+    TRUE
 }
