@@ -29,11 +29,11 @@ sync_batch <- function(config,reg,create_root=FALSE,verbose=TRUE) {
     ## wrapper function for sync_repo
     sync_source <- function(rownum,cf) {out <- capture.output(status <- sync_repo(cf[rownum,])); list(status=status,output=out) }
     ## map the jobs to the register
-    batchMap(reg,sync_source,1:nrow(config),more.args=list(cf=config))
+    BatchJobs::batchMap(reg,sync_source,1:nrow(config),more.args=list(cf=config))
     ## start jobs
-    submitJobs(reg)
-    waitForJobs(reg)
-    results <- reduceResultsList(reg,fun=function(job,res)res)
+    BatchJobs::submitJobs(reg)
+    BatchJobs::waitForJobs(reg)
+    results <- BatchJobs::reduceResultsList(reg,fun=function(job,res)res)
     out <- list(status=sapply(results,function(z)z$status),output=lapply(results,function(z)paste(z,collapse="\n")))
     out
 }
