@@ -20,12 +20,11 @@ sync_repo <- function(config,create_root=FALSE,verbose=TRUE) {
     ## save some current settings: path and proxy env values
     settings=save_current_settings()
     ## iterate through each dataset in turn
-    sync_ok <- rep(as.logical(NA),nrow(config))
+    sync_ok <- rep(FALSE,nrow(config))
     for (di in 1:nrow(config)) {
         tryCatch(
             sync_ok[di] <- do_sync_repo(config[di,],create_root,verbose,settings),
             error=function(e) {
-                sync_ok[di] <- FALSE
                 cat("\nThere was a problem synchronizing the dataset:",config$name[di],". The error message was:",e$message,"\n")
             }
         )
