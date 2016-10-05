@@ -10,11 +10,12 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(BatchJobs)
-#' setConfig(cluster.functions= makeClusterFunctionsMulticore(ncpus=7),debug=FALSE)
-#' reg <- makeRegistry(id="syncysync",file.dir="sync_files",packages="raadsync")
-#' cf <- read_repo_config("/my/local/repo/config")
-#' sync_log <- sync_batch(cf,reg)
+#'  library(BatchJobs)
+#'  setConfig(cluster.functions= makeClusterFunctionsMulticore(ncpus=7),debug=FALSE)
+#'  reg <- makeRegistry(id="syncysync",file.dir="sync_files",packages="raadsync")
+#'  cf <- read_repo_config("/my/local/repo/config")
+#'  sync_log <- sync_batch(cf,reg)
+#'  removeRegistry(reg,ask="no") ## clean up
 #' }
 #'
 #' @export
