@@ -378,8 +378,8 @@
      "comment":"",
      "do_sync":false,
      "method":"oceandata",
-     "method_flags":"search=T*L3m_MO_SST_9.bz2",
-     "postprocess":"bunzip2",
+     "method_flags":"search=T*L3m_MO_SST_sst_9km.nc",
+     "postprocess":"",
      "access_function":"",
      "data_group":"Sea surface temperature"
     },
