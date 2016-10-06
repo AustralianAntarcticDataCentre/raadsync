@@ -14,6 +14,8 @@ oceandata=function(dataset) {
 
     assert_that(is.string(dataset$method_flags))
     myfiles=system(paste0("wget -q --post-data=\"cksum=1&",dataset$method_flags,"\" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi"),intern=TRUE)
+    ## catch "Sorry No Files Matched Your Query"
+    if (any(grepl("no files matched your query",myfiles,ignore.case=TRUE))) stop("No files matched the supplied query")
     myfiles=myfiles[-c(1,2)] ## get rid of header line and blank line that follows it
     myfiles=ldply(str_split(myfiles,"[[:space:]]+")) ## split checksum and file name from each line
     colnames(myfiles)=c("checksum","filename")
