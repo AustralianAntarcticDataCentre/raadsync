@@ -13,9 +13,16 @@ oceandata=function(dataset) {
     ##  or just include the data type in the search pattern e.g. "search=A2002*L3m_DAY_CHL_chlor*9km*
 
     assert_that(is.string(dataset$method_flags))
-    myfiles=system(paste0("wget -q --post-data=\"cksum=1&",dataset$method_flags,"\" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi"),intern=TRUE)
+    tries <- 0
+    while (tries<3) {
+        ## sometimes this takes a couple of attempts!
+        myfiles <- system2("wget",paste0("-q --post-data=\"cksum=1&",dataset$method_flags,"\" -O - http://oceandata.sci.gsfc.nasa.gov/search/file_search.cgi"),stdout=TRUE)
+        if (is.null(attr(myfiles,"status")) || length(myfiles)>0) break
+        tries <- tries+1
+    }
+    if (!is.null(attr(myfiles,"status")) && attr(myfiles,"status")!=0) stop("error with oceancolour data file search (query: ",dataset$method_flags,")")
     ## catch "Sorry No Files Matched Your Query"
-    if (any(grepl("no files matched your query",myfiles,ignore.case=TRUE))) stop("No files matched the supplied query")
+    if (any(grepl("no files matched your query",myfiles,ignore.case=TRUE))) stop("No files matched the supplied oceancolour data file search query (",dataset$method_flags,")")
     myfiles=myfiles[-c(1,2)] ## get rid of header line and blank line that follows it
     myfiles=ldply(str_split(myfiles,"[[:space:]]+")) ## split checksum and file name from each line
     colnames(myfiles)=c("checksum","filename")
