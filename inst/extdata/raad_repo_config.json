@@ -594,7 +594,7 @@
      "citation":"See http://www2.mmm.ucar.edu/rt/amps/",
      "source_urls":"http://www2.mmm.ucar.edu/rt/amps/wrf_grib/",
      "license":"Please cite",
-     "comment":"d1,d2 files for hours 000-015 only",
+     "comment":"d1,d2 files for hours 000-027 only",
      "do_sync":false,
      "method":"amps",
      "method_flags":"",

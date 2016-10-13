@@ -10,7 +10,7 @@ amps <- function(dataset) {
     x <- html_session(dataset$source_url)
     n <- html_attr(html_nodes(x,"a"),"href")
     idx <- which(sapply(n,function(z)grepl("[[:digit:]]+",z,ignore.case=TRUE))) ## links that are all digits
-    accept <- function(z) grepl("\\.txt$",html_attr(z,"href"),ignore.case=TRUE) || grepl("d[12]_f(000|003|006|009|012|015)\\.grb$",html_attr(z,"href"),ignore.case=TRUE) ## which files to accept
+    accept <- function(z) grepl("\\.txt$",html_attr(z,"href"),ignore.case=TRUE) || grepl("d[12]_f(000|003|006|009|012|015|018|021|024|027)\\.grb$",html_attr(z,"href"),ignore.case=TRUE) ## which files to accept
     this_path_no_trailing_sep <- sub("[\\/]$","",directory_from_url(dataset$source_url))
     for (i in idx) { ## loop through directories
         target_dir <- sub("/$","",n[i])
