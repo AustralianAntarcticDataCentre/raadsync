@@ -50,7 +50,7 @@ oceandata=function(dataset) {
         }
         if (download_this) {
             dummy=dataset
-            dummy$method_flags=paste("--progress=dot:giga","--recursive","--directory-prefix",oceandata_url_mapper(this_url,path_only=TRUE),"--cut-dirs=2","--no-host-directories",sep=" ")
+            dummy$method_flags=paste("--progress=dot:giga","--timeout=1800","--recursive","--directory-prefix",oceandata_url_mapper(this_url,path_only=TRUE),"--cut-dirs=2","--no-host-directories",sep=" ")
             dummy$source_url=this_url
             wget_call=build_wget_call(dummy)
             do_wget(wget_call,dataset)
