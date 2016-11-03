@@ -190,13 +190,13 @@ SATCO,par,PAR_par
 SATCO,pic,PIC_pic
 SATCO,poc,POC_poc
 S,NDVI,LAND_NDVI
-V,KD490,NPP_KD490_Kd_490
-V,CHL,NPP_CHL_chl_ocx
-V,IOP,NPP_IOP_.*
-V,par,NPP_PAR_par
-V,pic,NPP_PIC_pic
-V,poc,NPP_POC_poc
-V,RRS,NPP_RRS_.*"
+V,KD490,S?NPP_KD490_Kd_490
+V,CHL,S?NPP_CHL_chl_.*
+V,IOP,S?NPP_IOP_.*
+V,par,S?NPP_PAR_par
+V,pic,S?NPP_PIC_pic
+V,poc,S?NPP_POC_poc
+V,RRS,S?NPP_RRS_.*"
     ## note some VIIRS parameters that appear in the browse file structure but with no associated files, and so have not been coded here:
     ## CHLOCI GSM QAA ZLEE
     ## platforms yet to do: "Q","H" (are different folder structure to the others)
