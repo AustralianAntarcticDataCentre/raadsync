@@ -191,7 +191,8 @@ SATCO,pic,PIC_pic
 SATCO,poc,POC_poc
 S,NDVI,LAND_NDVI
 V,KD490,S?NPP_KD490_Kd_490
-V,chl,S?NPP_CHL_.*
+V,chl,S?NPP_CHL_chl_ocx
+V,chlor,S?NPP_CHL_chlor_a
 V,IOP,S?NPP_IOP_.*
 V,par,S?NPP_PAR_par
 V,pic,S?NPP_PIC_pic
