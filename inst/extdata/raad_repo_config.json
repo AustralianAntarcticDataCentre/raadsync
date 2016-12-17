@@ -527,7 +527,7 @@
      "comment":"",
      "do_sync":false,
      "method":"oceandata",
-     "method_flags":"search=A*L3b_DAY_SNPP_RRS.nc",
+     "method_flags":"search=A*L3b_DAY_RRS.nc",
      "postprocess":"",
      "access_function":"roc::readL3",
      "data_group":"Ocean colour"
