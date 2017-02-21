@@ -266,8 +266,10 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
         url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
         colnames(url_parts)=c("full_url","platform","date","type","timeperiod","parm","spatial","spatial_unit")
     } else if (grepl("\\.L3b_",this_url)) {
-        url_parts=str_match(this_url,"/([ASTC])([[:digit:]]+)\\.(L3b)_([[:upper:][:digit:]]+)_(.*?)\\.(bz2|nc)")
+   
+        url_parts=str_match(this_url,"/([ASTCV])([[:digit:]]+)\\.(L3b)_([[:upper:][:digit:]]+)_(.*?)\\.(bz2|nc)")
         ## https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2
+           
         ## e.g. [1,] "https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2" "A"  "20090322009059" "L3b" "MO" "KD490"
         ## https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2015016.L3b_DAY_RRS.nc
         url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
