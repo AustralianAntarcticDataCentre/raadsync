@@ -154,11 +154,11 @@
      "citation":"",
      "source_urls":"ftp://ftp.ifremer.fr//ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/*",
      "license":"",
-     "comment":"NOTE - does not yet quite work because we aren't uncompressing the .Z files",
+     "comment":"",
      "do_sync":false,
      "method":"wget",
      "method_flags":"--recursive --level=inf --no-parent",
-     "postprocess":"",
+     "postprocess":"uncompress",
      "access_function":"readice",
      "data_group":"Sea ice"
     },
