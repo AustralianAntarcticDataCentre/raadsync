@@ -5,13 +5,20 @@
 # @param name string: filename of the config file
 # @param subpath string: the subpath under default.datadir to look in
 #
-# @return path to the config file. A warning will be issued if it does not exist.
+# @return path to the config file. A warning will be issued if it does not exist. If option default.datadir does not exist, a warning will be issued and NULL returned
 #
 # @export
 get_local_config <- function(name = "local_raadsync_config.json", subpath = "admin") {
-  path <- file.path(getOption("default.datadir"), subpath, name)
-  if (!file.exists(path)) warning(sprintf("directory does not exist %s", path))
-  path
+    ddir <- getOption("raadtools.default.datadir")
+    if (is.null(ddir)) ddir <- getOption("default.datadir") ## the old option, for backwards-compatibility
+    if (is.null(ddir)) {
+        warning("option raadtools.default.datadir is not set")
+        path <- NULL
+    } else {
+        path <- file.path(ddir, subpath, name)
+        if (!file.exists(path)) warning(sprintf("directory does not exist %s", path))
+    }
+    path
 }
 
 ##-------------------------------------------
