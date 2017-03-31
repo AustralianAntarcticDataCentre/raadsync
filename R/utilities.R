@@ -1,14 +1,23 @@
-##-------------------------------------------
-## various helper functions
-## not exported for user
-
-#' get the local config file, defaults to
-#' habits of original authors
-get_local_config =  function(name = "local_raadsync_config.json", subpath = "admin") {
+# Get the local raadsync config file
+#
+# The defaults (filename "local_raadsync_config.json" under the subpath "admin" reflect the habits of the raadsync package authors
+#
+# @param name string: filename of the config file
+# @param subpath string: the subpath under default.datadir to look in
+#
+# @return path to the config file. A warning will be issued if it does not exist.
+#
+# @export
+get_local_config <- function(name = "local_raadsync_config.json", subpath = "admin") {
   path <- file.path(getOption("default.datadir"), subpath, name)
   if (!file.exists(path)) warning(sprintf("directory does not exist %s", path))
   path
 }
+
+##-------------------------------------------
+## various helper functions
+## not exported for user
+
 save_current_settings=function() {
     return(list(working_dir=getwd(), ## current working directory
                 env_http_proxy=Sys.getenv("http_proxy"), ## proxy env vars
