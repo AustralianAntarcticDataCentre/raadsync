@@ -12,9 +12,9 @@ cf$local_file_root <- lfr
 tf <- tempfile()
 print(tf)
 test_that("sync  works", {
-  sink(tf)
+  #sink(tf)
   expect_true(sync_repo(cf, verbose = FALSE))
-  sink(NULL)
+  #sink(NULL)
 })
 
 test_that("sync got some files", {
