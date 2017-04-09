@@ -204,14 +204,24 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
                     ## unconditionally decompress any zipped files and then delete them
                     files_to_decompress=list.files(directory_from_url(this_dataset$source_url),pattern="\\.zip$",recursive=TRUE)
                     do_decompress_files(pp[i],files=files_to_decompress)
-                } else if (pp[i] %in% c("gunzip_delete","bunzip2_delete")) {
+                } else if (pp[i] %in% c("gunzip_delete","bunzip2_delete","uncompress_delete")) {
                     ## unconditionally unzip then delete
-                    file_pattern=ifelse(pp[i]=="gunzip_delete","\\.gz$","\\.bz2$")
+                    file_pattern <- switch(pp[i],
+                                           "gunzip_delete"="\\.gz$",
+                                           "bunzip2_delete"="\\.bz2$",
+                                           "uncompress_delete"="\\.Z$",
+                                           stop("unrecognized decompression")
+                                           )
                     files_to_decompress=list.files(directory_from_url(this_dataset$source_url),pattern=file_pattern,recursive=TRUE)
                     do_decompress_files(pp[i],files=files_to_decompress)
-                } else if (pp[i] %in% c("gunzip","bunzip2")) {
+                } else if (pp[i] %in% c("gunzip","bunzip2","uncompress")) {
                     ## decompress but retain compressed file. decompress only if .gz/.bz2 file has changed
-                    file_pattern=ifelse(pp[i]=="gunzip","\\.gz$","\\.bz2$")
+                    file_pattern <- switch(pp[i],
+                                           "gunzip"="\\.gz$",
+                                           "bunzip2"="\\.bz2$",
+                                           "uncompress"="\\.Z$",
+                                           stop("unrecognized decompression")
+                                           )
                     files_to_decompress=find_changed_files(file_list_before,file_list_after,file_pattern)
                     do_decompress_files(pp[i],files=files_to_decompress)
                     ## also decompress if uncompressed file does not exist

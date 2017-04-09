@@ -1,3 +1,26 @@
+# Get the local raadsync config file
+#
+# The defaults (filename "local_raadsync_config.json" under the subpath "admin" reflect the habits of the raadsync package authors
+#
+# @param name string: filename of the config file
+# @param subpath string: the subpath under default.datadir to look in
+#
+# @return path to the config file. A warning will be issued if it does not exist. If option default.datadir does not exist, a warning will be issued and NULL returned
+#
+# @export
+get_local_config <- function(name = "local_raadsync_config.json", subpath = "admin") {
+    ddir <- getOption("raadtools.default.datadir")
+    if (is.null(ddir)) ddir <- getOption("default.datadir") ## the old option, for backwards-compatibility
+    if (is.null(ddir)) {
+        warning("option raadtools.default.datadir is not set")
+        path <- NULL
+    } else {
+        path <- file.path(ddir, subpath, name)
+        if (!file.exists(path)) warning(sprintf("directory does not exist %s", path))
+    }
+    path
+}
+
 ##-------------------------------------------
 ## various helper functions
 ## not exported for user
@@ -55,7 +78,14 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
     ## decompress (unzip/gunzip) compressed files
     ## this function overwrites existing decompressed files if overwrite is TRUE
     assert_that(is.string(method))
-    method=match.arg(method,c("unzip","unzip_delete","gunzip","gunzip_delete","bunzip2","bunzip2_delete"))
+    method=match.arg(method,c("unzip","unzip_delete","gunzip","gunzip_delete","bunzip2","bunzip2_delete","uncompress","uncompress_delete"))
+    if (grepl("uncompress",method)) {
+        ## uncompress uses archive::file_read, which is a suggested package
+        ## check that we have it
+        if (!requireNamespace("archive",quietly=TRUE))
+            stop("the archive package is needed for uncompress functionality")
+
+    }
     ## unzip() issues warnings in some cases when operations have errors, and sometimes issues actual errors
     warn=getOption("warn") ## save current setting
     options(warn=0) ## so that we can be sure that last.warning will be set
@@ -148,6 +178,32 @@ do_decompress_files=function(method,files,overwrite=TRUE) {
                                     cat(sprintf("  problem bunzipping %s: %s",thisf,e))
                                 }
                                 )
+                   }
+                   cat(sprintf("done\n"))
+               },
+               "uncompress_delete"=,
+               "uncompress"={
+                   unzip_this<-TRUE
+                   destname <- gsub("\\.Z$","",thisf,ignore.case=TRUE)
+                   if (!overwrite) {
+                       ## check if file exists, so that we can issue a more informative trace message to the user
+                       if (file.exists(destname)) {
+                           cat(sprintf(" uncompressed file exists, skipping ... "))
+                           unzip_this <- FALSE
+                       }
+                   }
+                   if (unzip_this) {
+                       ## wrap this in tryCatch block so that errors do not halt our whole process
+                       tryCatch({
+                           fsize <- ceiling(file.info(thisf)$size/1e4)*1e4
+                           ff <- archive::file_read(thisf)
+                           writeBin(readBin(ff,"raw",fsize),destname)
+                           close(ff)
+                           if (grepl("delete",method)) file.remove(thisf)
+                       },
+                       error=function(e){
+                           cat(sprintf("  problem uncompressing %s: %s",thisf,e))
+                       })
                    }
                    cat(sprintf("done\n"))
                },

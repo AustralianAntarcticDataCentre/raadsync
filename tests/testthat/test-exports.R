@@ -1,7 +1,7 @@
 
 context("exports")
 
-agetfile <- "http://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2"
+agetfile <- "https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A20090322009059.L3b_MO_KD490.main.bz2"
 test_that("exported functions", {
   expect_that(oceandata_parameter_map("V"), is_a("data.frame"))
   expect_that(oceandata_parameter_map("T"), is_a("data.frame"))
