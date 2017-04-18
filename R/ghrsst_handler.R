@@ -35,7 +35,7 @@ ghrsst=function(dataset) {
     for (thisyear in yearlist) {
         for (thisday in 1:366) {
             dummy=dataset
-            dummy$source_url=paste0("ftp://ftp.nodc.noaa.gov/pub/data.nodc/ghrsst/L4/GLOB/JPL/MUR/",thisyear,"/",sprintf("%03d",thisday),"/")
+            dummy$source_url=paste0("ftp://podaac-ftp.jpl.nasa.gov/allData/ghrsst/data/GDS2/L4/GLOB/JPL/MUR/v4.1/",thisyear,"/",sprintf("%03d",thisday),"/")
             wget_call=build_wget_call(dummy)
             do_wget(wget_call,dataset)
         }
