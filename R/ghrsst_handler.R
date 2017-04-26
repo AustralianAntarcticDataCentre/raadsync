@@ -35,7 +35,9 @@ ghrsst <- function(dataset) {
         dataset$method_flags <- paste(dataset$method_flags,"--no-parent",sep=" ")
     }
     for (thisyear in yearlist) {
-        for (thisday in 1:366) {
+        daylist <- if (thisyear==2002) 152:365 else 1:366
+        if (thisyear==as.numeric(format(Sys.Date(),"%Y"))) daylist <- daylist[daylist<=as.numeric(format(Sys.Date(),"%j"))]
+        for (thisday in daylist) {
             dummy <- dataset
             dummy$source_url <- paste0("ftp://podaac-ftp.jpl.nasa.gov/allData/ghrsst/data/GDS2/L4/GLOB/JPL/MUR/v4.1/",thisyear,"/",sprintf("%03d",thisday),"/")
             wget_call <- build_wget_call(dummy)
