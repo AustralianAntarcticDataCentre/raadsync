@@ -246,13 +246,24 @@ build_wget_call=function(dataset) {
     wget_call
 }
 
-do_wget=function(wget_call,dataset) {
+do_wget <- function(wget_call,dataset) {
     assert_that(is.string(wget_call))
     if (dataset$skip_downloads) {
         cat(sprintf(" skip_downloads is TRUE, not executing: %s\n",wget_call))
     } else {
         cat(sprintf(" executing: %s\n",wget_call))
-        system(wget_call)
+        if (sink.number()>0) {
+            ## we have a sink() redirection in place
+            ## sink() won't catch the output of system commands, which means we miss stuff in our log
+            ## workaround: send output to temporary file so that we can capture it
+            output_file <- gsub("\\\\","\\\\\\\\",tempfile()) ## escape backslashes
+            wget_call <- sub("^wget ",paste0("wget -o \"",output_file,"\" "),wget_call)
+            system(wget_call)
+            ## now echo the contents of output_file to console, so that sink() captures it
+            cat(readLines(output_file),sep="\n")
+        } else {
+            system(wget_call)
+        }
     }
 }
 
