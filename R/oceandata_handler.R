@@ -275,8 +275,13 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
         ## https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2015016.L3b_DAY_RRS.nc
         url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
         colnames(url_parts)=c("full_url","platform","date","type","timeperiod","parm")
+    } else if (grepl("\\.L2", this_url)) {
+      # "https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/A2017002003000.L2_LAC_OC.nc"
+      url_parts=str_match(this_url,"/([ASTCV])([[:digit:]]+)\\.(L2)_([[:upper:][:digit:]]+)_(.*?)\\.(bz2|nc)")
+      url_parts=as.data.frame(url_parts,stringsAsFactors=FALSE)
+      colnames(url_parts)=c("full_url","platform","date","type","coverage","parm", "extension")
     } else {
-        stop("not a L3 binned or mapped file")
+        stop("not a L2 or L3 binned or L3 mapped file")
     }
     this_year=substr(url_parts$date,1,4)
     if (is.na(url_parts$type)) {
@@ -304,6 +309,15 @@ oceandata_url_mapper=function(this_url,path_only=FALSE,sep=.Platform$file.sep) {
                          out<-paste0(out,sep) ## trailing path separator
                      }
                  },
+               L2 = {
+                 this_doy<-substr(url_parts$date,5,7)
+                 out<-paste("oceandata.sci.gsfc.nasa.gov",oceandata_platform_map(url_parts$platform,error_no_match=TRUE),"L2",this_year,this_doy,sep=sep)
+                 if (!path_only) {
+                   out<-paste(out,basename(this_url),sep=sep)
+                 } else {
+                   out<-paste0(out,sep) ## trailing path separator
+                 }
+               },
                stop("unrecognized file type: ",url_parts$type,"\n",str(url_parts))
                )
     }
