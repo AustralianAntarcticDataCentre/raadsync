@@ -17,7 +17,7 @@
 #' \item name string: dataset name
 #' \item description string: description
 #' \item reference string: URL to metadata record or home page for the dataset
-#' \item source_urls list: list of URLs to the data
+#' \item source_urls list-col: a list-column of URLs to the data
 #' \item do_sync logical: if FALSE this dataset will not be synchronized
 #' \item method string: the synchronization method (currently only "wget")
 #' \item method_flags string: flags to pass to wget (if method=="wget") or the custom handler (if not)
@@ -162,8 +162,12 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
         assert_that(is.string(dataset$password))
         cat("done.\n")
     }
+    
+    datasets <- dcf$datasets
+    ## tidy-er
+    datasets$source_urls <- lapply(datasets$source_urls, function(x) data.frame(source_urls = x, stringsAsFactors = FALSE))
     ##class(dcf)=c('repo_config',class(dcf)) ## class info not used yet - comment out for time being
-    dcf$datasets
+    datasets
 }
 
 #' Produce summary of repository configuration
@@ -224,7 +228,9 @@ repo_summary=function(repo_config,file=tempfile(fileext=".html"),format="html") 
         cat("\nLicense: ",this_license,"\n",file=rmd_file,append=TRUE)
         thisfun=repo_config$access_function[k]
         if (is.null(thisfun) || is.na(thisfun) || thisfun=="") { thisfun="none registered" }
-        temp=file.path(repo_config$local_file_root[[k]],sapply(repo_config$source_urls[[k]],directory_from_url))
+        ## tidy-er
+        temp=file.path(repo_config$local_file_root[[k]],  directory_from_url(repo_config$source_urls[[k]]$source_urls))
+        #temp=file.path(repo_config$local_file_root[[k]],  sapply(repo_config$source_urls[[k]],directory_from_url))
         temp=gsub("\\\\","/",temp)
         temp=unique(gsub("/+","/",temp))
         cat("\nLocal file system path:\n",paste(paste0("- ",temp),sep="\n",collapse="\n"),"\n",file=rmd_file,append=TRUE,sep="")

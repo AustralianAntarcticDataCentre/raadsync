@@ -60,14 +60,20 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
     Sys.setenv(ftp_proxy=this_dataset$ftp_proxy)
     if (verbose) cat(sprintf("done.\n"))
 
-    if (is.character(this_dataset$source_urls)) {
-        ## was expecting a list
-        this_dataset$source_urls=list(this_dataset$source_urls)
+    # tidy-er
+    if (!is.list(this_dataset$source_urls)) {
+      warning("expected a list-col for source_urls, where's Mike ...")
     }
+    # if (is.character(this_dataset$source_urls)) {
+    #     ## was expecting a list
+    #     this_dataset$source_urls=list(this_dataset$source_urls)
+    # }
     ## do the main synchonization, usually directly with wget, otherwise with custom methods
-    for (si in 1:length(this_dataset$source_urls[[1]])) {
+    ## tidy-er 
+    for (si in seq_len(nrow(this_dataset$source_urls[[1]]))) {
+    #for (si in 1:length(this_dataset$source_urls[[1]])) {
         ## iterate through source_urls
-        this_dataset$source_url=this_dataset$source_urls[[1]][[si]]
+        this_dataset$source_url=this_dataset$source_urls[[1]]$source_urls[si]
         cat(sprintf("\n---\nProcessing source_url: %s\n",this_dataset$source_url))
 
         ## postprocessing
