@@ -4,7 +4,7 @@ cf <- read_repo_config(local_config_file = NULL)
 cf <- subset(cf, name == "NSIDC SMMR-SSM/I Nasateam sea ice concentration")
 cf$do_sync <- TRUE
 tok <- "--accept=\"*nt_200703*\""
-cf$method_flags <- paste(cf$method_flags, "--accept=\"*nt_20160101*\"", "--accept=\"*nt_20170512*\"")
+cf$method_flags <- paste(cf$method_flags, "--accept=\"*nt_20120101*\"", "--accept=\"*nt_20130512*\"")
 
 lfr <- tempdir()
 cf$local_file_root <- lfr

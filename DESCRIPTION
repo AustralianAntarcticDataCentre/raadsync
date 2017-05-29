@@ -9,6 +9,8 @@ Description: Tools to get and maintain a data repository. In particular this is
 License: MIT + file LICENSE
 Imports:
     digest,
+    dplyr, 
+    tidyr,
     R.utils,
     R.cache,
     jsonlite,

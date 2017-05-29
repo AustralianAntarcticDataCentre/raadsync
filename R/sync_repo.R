@@ -21,7 +21,7 @@ sync_repo <- function(config,create_root=FALSE,verbose=TRUE) {
     settings=save_current_settings()
     ## iterate through each dataset in turn
     sync_ok <- rep(FALSE,nrow(config))
-    for (di in 1:nrow(config)) {
+    for (di in seq_len(nrow(config))) {
         tryCatch(
             sync_ok[di] <- do_sync_repo(config[di,],create_root,verbose,settings),
             error=function(e) {
@@ -70,34 +70,40 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
     # }
     ## do the main synchonization, usually directly with wget, otherwise with custom methods
     ## tidy-er 
-    for (si in seq_len(nrow(this_dataset$source_urls[[1]]))) {
-    #for (si in 1:length(this_dataset$source_urls[[1]])) {
-        ## iterate through source_urls
-        this_dataset$source_url=this_dataset$source_urls[[1]]$source_urls[si]
-        cat(sprintf("\n---\nProcessing source_url: %s\n",this_dataset$source_url))
+    ## we unnest, and select only the variables that get used, 
+    ##  so this_dataset is now copied out for all source_urls (maybe only 1) and the column
+    ## is called "source_url"
+    this_dataset <- this_dataset %>% 
+      dplyr::select(source_urls, postprocess, method, method_flags, wget_flags, local_file_root, user, password, wait, 
+                    skip_downloads) %>% 
+      tidyr::unnest()
+    for (si in seq_len(nrow(this_dataset))) {
+      ## extract it one time here
+      i_source_url <- this_dataset$source_url[si]
+        cat(sprintf("\n---\nProcessing source_url: %s\n", i_source_url))
 
         ## postprocessing
-        pp=this_dataset$postprocess
+        pp=this_dataset$postprocess[si]
         if (is.list(pp) && length(pp)==1) {
             pp=pp[[1]] ## may get char vector embedded in single-element list
         }
         if (!is.null(pp) && pp %in% c(NA,"NA")) pp=NULL
         pp=tolower(pp)
         pp=Filter(nchar,pp) ## drop empty entries
-        this_path_no_trailing_sep=sub("[\\/]$","",directory_from_url(this_dataset$source_url))
+        this_path_no_trailing_sep=sub("[\\/]$","",directory_from_url(i_source_url ))
         if (verbose) {
             cat(sprintf(" this dataset path is: %s\n",this_path_no_trailing_sep))
         }
-        file_pattern=sub(".*/","",this_dataset$source_url)
+        file_pattern = sub(".*/","", i_source_url )
         if (nchar(file_pattern)<1) file_pattern=NULL
-        if (any(this_dataset$method==c("aadc_portal","aadc_eds"))) { file_pattern=NULL } ## set to null so that file_list_* (below) searches the data directory
+        if (any(this_dataset$method[si] == c("aadc_portal","aadc_eds"))) { file_pattern=NULL } ## set to null so that file_list_* (below) searches the data directory
         ## build file list if postprocessing required
         if (length(pp)>0) {
             ## take snapshot of this directory before we start syncing
             if (verbose) {
                 cat(sprintf(" building file list ... "))
             }
-            file_list_before=file.info(list.files(path=this_path_no_trailing_sep,pattern=file_pattern,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
+            file_list_before = file.info(list.files(path= this_path_no_trailing_sep, pattern=file_pattern,recursive=TRUE,full.names=TRUE)) ## full.names TRUE so that names are relative to current working directory
             if (file.exists(this_path_no_trailing_sep)) {
                 ## in some cases this points directly to a file
                 temp=file.info(this_path_no_trailing_sep)
@@ -108,9 +114,9 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
             ##cat(str(file_list_before),"\n")
             if (verbose) cat(sprintf("done.\n"))
         }
-        if (this_dataset$method=="wget") {
-            do_wget(build_wget_call(this_dataset),this_dataset)
-        } else if (this_dataset$method=="aadc_portal") {
+        if (this_dataset$method[si] == "wget") {
+            do_wget(build_wget_call(this_dataset[si, ]), this_dataset[si, ])
+        } else if (this_dataset$method[si] == "aadc_portal") {
             ## clumsy way to get around AADC portal file-renaming issue
             ## e.g. if we ask for http://data.aad.gov.au/aadc/portal/download_file.cfm?file_id=1234
             ## then we get local file named data.aad.gov.au/aadc/portal/download_file.cfm@file_id=1234 or similar
@@ -118,55 +124,55 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
             ##  (the file is placed in the local_file_root directory)
             ## Change 8-Dec-2015 - change into subdirectory named by file_id of file, so that we don't get files mixed together in data.aad.gov.au/aadc/portal/
             ## note that this requires the "--recursive" flag NOT TO BE USED
-            this_file_id=str_match(this_dataset$source_url,"file_id=(\\d+)")[2]
-            if (!file.exists(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id))) {
-                dir.create(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id),recursive=TRUE)
+            this_file_id=str_match(i_source_url ,"file_id=(\\d+)")[2]
+            if (!file.exists(file.path(this_dataset$local_file_root[si],"data.aad.gov.au","aadc","portal",this_file_id))) {
+                dir.create(file.path(this_dataset$local_file_root[si],"data.aad.gov.au","aadc","portal",this_file_id),recursive=TRUE)
             }
-            setwd(file.path(this_dataset$local_file_root,"data.aad.gov.au","aadc","portal",this_file_id))
-            if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
-                this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
+            setwd(file.path(this_dataset$local_file_root[si], "data.aad.gov.au","aadc","portal",this_file_id))
+            if (!grepl("--content-disposition", this_dataset$method_flags[si], ignore.case=TRUE)) {
+                this_dataset$method_flags=paste(this_dataset$method_flags[si], "--content-disposition",sep=" ")
             }
             ## these two should be doable in a single regex, but done separately until I can figure it out
-            if (grepl("--recursive ",this_dataset$method_flags,ignore.case=TRUE)) {
-                this_dataset$method_flags=str_trim(sub("--recursive ","",this_dataset$method_flags))
+            if (grepl("--recursive ",this_dataset$method_flags[si], ignore.case=TRUE)) {
+                this_dataset$method_flags=str_trim(sub("--recursive ","", this_dataset$method_flags[si]))
             }
-            if (grepl("--recursive$",this_dataset$method_flags,ignore.case=TRUE)) {
-                this_dataset$method_flags=str_trim(sub("--recursive$","",this_dataset$method_flags))
+            if (grepl("--recursive$",this_dataset$method_flags[si], ignore.case=TRUE)) {
+                this_dataset$method_flags[si] = str_trim(sub("--recursive$","", this_dataset$method_flags[si]))
             }
-            do_wget(build_wget_call(this_dataset),this_dataset)
-            setwd(this_dataset$local_file_root)
+            do_wget(build_wget_call(this_dataset[si, ]), this_dataset[si, ])
+            setwd(this_dataset$local_file_root[si])
             ## note that unzipping of files with method aadc_portal is odd, if there are multiple source_urls defined. The second and after will get unzipped multiple times
-        } else if (this_dataset$method=="aadc_eds") {
+        } else if (this_dataset$method[si] == "aadc_eds") {
             ## clumsy way to get around AADC EDS file naming issues
             ## e.g. if we ask for http://data.aad.gov.au/eds/file/4494
             ## then we get local file named data.aad.gov.au/eds/file/4494 (which is most likely a zipped file)
             ## if we unzip this here, we get this zip's files mixed with others
             ## change into subdirectory named by file_id of file, so that we don't get files mixed together in data.aad.gov.au/eds/file/
             ## note that this requires the "--recursive" flag NOT TO BE USED
-            this_file_id=str_match(this_dataset$source_url,"/file/(\\d+)$")[2]
-            if (!file.exists(file.path(this_dataset$local_file_root,"data.aad.gov.au","eds","file",this_file_id))) {
-                dir.create(file.path(this_dataset$local_file_root,"data.aad.gov.au","eds","file",this_file_id),recursive=TRUE)
+            this_file_id=str_match(i_source_url , "/file/(\\d+)$")[2]
+            if (!file.exists(file.path(this_dataset$local_file_root[si], "data.aad.gov.au","eds","file",this_file_id))) {
+                dir.create(file.path(this_dataset$local_file_root[si], "data.aad.gov.au","eds","file",this_file_id),recursive=TRUE)
             }
-            setwd(file.path(this_dataset$local_file_root,"data.aad.gov.au","eds","file",this_file_id))
-            if (!grepl("--content-disposition",this_dataset$method_flags,ignore.case=TRUE)) {
-                this_dataset$method_flags=paste(this_dataset$method_flags,"--content-disposition",sep=" ")
+            setwd(file.path(this_dataset$local_file_root[si], "data.aad.gov.au","eds","file",this_file_id))
+            if (!grepl("--content-disposition",this_dataset$method_flags[si], ignore.case=TRUE)) {
+                this_dataset$method_flags=paste(this_dataset$method_flags[si], "--content-disposition",sep=" ")
             }
             ## these two should be doable in a single regex, but done separately until I can figure it out
-            if (grepl("--recursive ",this_dataset$method_flags,ignore.case=TRUE)) {
-                this_dataset$method_flags=str_trim(sub("--recursive ","",this_dataset$method_flags))
+            if (grepl("--recursive ",this_dataset$method_flags[si], ignore.case=TRUE)) {
+                this_dataset$method_flags[si] = str_trim(sub("--recursive ","", this_dataset$method_flags[si]))
             }
-            if (grepl("--recursive$",this_dataset$method_flags,ignore.case=TRUE)) {
-                this_dataset$method_flags=str_trim(sub("--recursive$","",this_dataset$method_flags))
+            if (grepl("--recursive$",this_dataset$method_flags[si], ignore.case=TRUE)) {
+                this_dataset$method_flags[si] = str_trim(sub("--recursive$","",this_dataset$method_flags[si]))
             }
-            do_wget(build_wget_call(this_dataset),this_dataset)
-            setwd(this_dataset$local_file_root)
+            do_wget(build_wget_call(this_dataset[si, ]),this_dataset[si, ])
+            setwd(this_dataset$local_file_root[si])
             ## note that unzipping of files is odd, if there are multiple source_urls defined. The second and after will get unzipped multiple times
-        } else if (exists(this_dataset$method,mode="function")) {
+        } else if (exists(this_dataset$method[si], mode="function")) {
             ## dispatch to custom handler
-            if (verbose) cat(sprintf(" using custom handler \"%s\"\n",this_dataset$method))
-            eval(parse(text=paste0(this_dataset$method,"(this_dataset)")))
+            if (verbose) cat(sprintf(" using custom handler \"%s\"\n",this_dataset$method[si]))
+            eval(parse(text=paste0(this_dataset$method[si],"(this_dataset)")))
         } else {
-            stop("unsupported method ",this_dataset$method," specified")
+            stop("unsupported method ",this_dataset$method[si]," specified")
         }
 
         ## build file list if postprocessing required
@@ -208,7 +214,7 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
             for (i in 1:length(pp)) {
                 if (pp[i]=="unzip_delete") {
                     ## unconditionally decompress any zipped files and then delete them
-                    files_to_decompress=list.files(directory_from_url(this_dataset$source_url),pattern="\\.zip$",recursive=TRUE)
+                    files_to_decompress=list.files(directory_from_url(i_source_url ),pattern="\\.zip$",recursive=TRUE)
                     do_decompress_files(pp[i],files=files_to_decompress)
                 } else if (pp[i] %in% c("gunzip_delete","bunzip2_delete","uncompress_delete")) {
                     ## unconditionally unzip then delete
@@ -218,7 +224,7 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
                                            "uncompress_delete"="\\.Z$",
                                            stop("unrecognized decompression")
                                            )
-                    files_to_decompress=list.files(directory_from_url(this_dataset$source_url),pattern=file_pattern,recursive=TRUE)
+                    files_to_decompress=list.files(directory_from_url(i_source_url ),pattern=file_pattern,recursive=TRUE)
                     do_decompress_files(pp[i],files=files_to_decompress)
                 } else if (pp[i] %in% c("gunzip","bunzip2","uncompress")) {
                     ## decompress but retain compressed file. decompress only if .gz/.bz2 file has changed

@@ -165,7 +165,7 @@ read_repo_config=function(local_config_file,default_config_file=system.file("ext
     
     datasets <- dcf$datasets
     ## tidy-er
-    datasets$source_urls <- lapply(datasets$source_urls, function(x) data.frame(source_urls = x, stringsAsFactors = FALSE))
+    datasets$source_urls <- lapply(datasets$source_urls, function(x) data.frame(source_url = x, stringsAsFactors = FALSE))
     ##class(dcf)=c('repo_config',class(dcf)) ## class info not used yet - comment out for time being
     datasets
 }
@@ -229,7 +229,7 @@ repo_summary=function(repo_config,file=tempfile(fileext=".html"),format="html") 
         thisfun=repo_config$access_function[k]
         if (is.null(thisfun) || is.na(thisfun) || thisfun=="") { thisfun="none registered" }
         ## tidy-er
-        temp=file.path(repo_config$local_file_root[[k]],  directory_from_url(repo_config$source_urls[[k]]$source_urls))
+        temp=file.path(repo_config$local_file_root[[k]],  directory_from_url(repo_config$source_urls[[k]]$source_url))
         #temp=file.path(repo_config$local_file_root[[k]],  sapply(repo_config$source_urls[[k]],directory_from_url))
         temp=gsub("\\\\","/",temp)
         temp=unique(gsub("/+","/",temp))
