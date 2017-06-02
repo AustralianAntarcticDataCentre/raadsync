@@ -83,7 +83,7 @@ do_sync_repo <- function(this_dataset,create_root,verbose,settings) {
         cat(sprintf("\n---\nProcessing source_url: %s\n", i_source_url))
 
         ## postprocessing
-        pp=this_dataset$postprocess[si]
+        pp = this_dataset$postprocess[si]
         if (is.list(pp) && length(pp)==1) {
             pp=pp[[1]] ## may get char vector embedded in single-element list
         }
