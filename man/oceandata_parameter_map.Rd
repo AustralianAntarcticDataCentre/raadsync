@@ -30,4 +30,3 @@ The \code{oceandata_parameter_map} function maps the URL parameter component ("N
 \references{
 \url{https://oceandata.sci.gsfc.nasa.gov/}
 }
-

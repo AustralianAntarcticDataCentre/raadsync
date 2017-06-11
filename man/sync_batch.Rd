@@ -32,4 +32,3 @@ Note that the \code{reg} object should be created with raadsync in the list of p
 }
 
 }
-

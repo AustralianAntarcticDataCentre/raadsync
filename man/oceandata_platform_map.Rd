@@ -31,4 +31,3 @@ The \code{oceandata_platform_map} function maps the URL platform component ("V" 
 \seealso{
 \code{\link{oceandata_timeperiod_map}} \code{\link{oceandata_parameter_map}}
 }
-

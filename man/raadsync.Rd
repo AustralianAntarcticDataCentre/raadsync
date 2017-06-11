@@ -8,10 +8,9 @@
 \description{
 \pkg{raadsync}
 }
-\author{
-Australian Antarctic Data Centre \email{aadc@aad.gov.au}
-}
 \references{
 \url{http://.data.aad.gov.au}
 }
-
+\author{
+Australian Antarctic Data Centre \email{aadc@aad.gov.au}
+}

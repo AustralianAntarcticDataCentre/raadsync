@@ -20,4 +20,3 @@ Path to the summary file in HTML or Rmarkdown format
 \description{
 Produce summary of repository configuration
 }
-

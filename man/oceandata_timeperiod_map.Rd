@@ -31,4 +31,3 @@ The \code{oceandata_timeperiod_map} function maps the URL time period component 
 \seealso{
 \code{\link{oceandata_platform_map}} \code{\link{oceandata_parameter_map}}
 }
-

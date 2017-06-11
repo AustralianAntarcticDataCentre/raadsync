@@ -32,7 +32,7 @@ Each dataset is specified by the following parameters in the configuration file:
 \item name string: dataset name
 \item description string: description
 \item reference string: URL to metadata record or home page for the dataset
-\item source_urls list: list of URLs to the data
+\item source_urls list-col: a list-column of URLs to the data
 \item do_sync logical: if FALSE this dataset will not be synchronized
 \item method string: the synchronization method (currently only "wget")
 \item method_flags string: flags to pass to wget (if method=="wget") or the custom handler (if not)
@@ -41,4 +41,3 @@ Each dataset is specified by the following parameters in the configuration file:
 \item password string: password for access to restricted ftp/http sites
 }
 }
-
