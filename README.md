@@ -2,6 +2,11 @@
 [![Travis-CI Build Status](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync.svg?branch=master)](https://travis-ci.org/AustralianAntarcticDataCentre/raadsync) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/77r060pgr0a6vd55?svg=true)](https://ci.appveyor.com/project/AustralianAntarcticDataCentre/raadsync) [![Coverage Status](https://img.shields.io/codecov/c/github/AustralianAntarcticDataCentre/raadsync/master.svg)](https://codecov.io/github/AustralianAntarcticDataCentre/raadsync?branch=master)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+Development has moved to the [bowerbird](https://github.com/AustralianAntarcticDivision/bowerbird) package
+==========================================================================================================
+
+------------------------------------------------------------------------
+
 An R package for maintaining a library of satellite-derived and similar environmental data.
 
 See [RAADTools](https://github.com/AustralianAntarcticDivision/raadtools) for reading, plotting, and manipulating these data.
